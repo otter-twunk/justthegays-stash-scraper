@@ -1,0 +1,40 @@
+name: JustTheGays
+
+sceneByURL:
+  - action: script
+    url:
+      - justthegays.tv/video/
+    script:
+      - python
+      - JustTheGays.py
+      - sceneByURL
+
+sceneByName:
+  action: script
+  script:
+    - python
+    - JustTheGays.py
+    - sceneByName
+
+sceneByQueryFragment:
+  action: script
+  script:
+    - python
+    - JustTheGays.py
+    - sceneByQueryFragment
+
+sceneByFragment:
+  action: script
+  script:
+    - python
+    - JustTheGays.py
+    - sceneByFragment
+
+performerByURL:
+  - action: script
+    url:
+      - justthegays.tv/performer/
+    script:
+      - python
+      - JustTheGays.py
+      - performerByURL
