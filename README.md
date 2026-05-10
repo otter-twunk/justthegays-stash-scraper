@@ -1,25 +1,14 @@
-# JustTheGays Stash Scraper
+# My Scrapers
 
-Files:
+This repo groups multiple Stash scrapers, one folder per site.
 
-- `JustTheGays.yml`
-- `JustTheGays.py`
+Folders:
 
-Install:
+- `scrapers/justthegays-tv`
+- `scrapers/justthegays-com`
 
-1. Copy both files into your Stash `scrapers` directory.
-2. In Stash, reload scrapers or restart the app.
+Each folder contains:
 
-What it supports:
-
-- `sceneByURL`
-- `sceneByName`
-- `sceneByQueryFragment`
-- `sceneByFragment`
-- `performerByURL`
-
-Notes:
-
-- This scraper uses Python only and does not require extra packages.
-- `sceneByName` returns search matches from JustTheGays.
-- `sceneByQueryFragment` and `sceneByFragment` try to find the closest JustTheGays match from the scene title or filename.
+- the Stash scraper `.yml`
+- the backing Python script
+- a small README with site-specific notes
