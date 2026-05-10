@@ -1,0 +1,122 @@
+{
+  "site_name": "TNAFlix",
+  "site_url": "https://www.tnaflix.com/",
+  "folder_name": "tnaflix-com",
+  "platform": "custom tube (no Cloudflare; accessible via stdlib urllib)",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://www.tnaflix.com/{category-slug}/{Title-Slug}/video{id}"
+    ],
+    "performer": [
+      "https://www.tnaflix.com/profile/{performer-slug}"
+    ],
+    "search": [
+      "https://www.tnaflix.com/search?what={query}  -- GET request, no blocking"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "JSON-LD VideoObject > name  (also og:title)",
+    "date": "JSON-LD VideoObject > uploadDate (ISO-8601 datetime; strip to YYYY-MM-DD)",
+    "description": "JSON-LD VideoObject > description  (may be 'No description provided'; treat as empty)",
+    "cover_image": "JSON-LD VideoObject > thumbnailUrl  (plain string CDN URL, NOT an array)",
+    "performers": "HTML: <a class=\"badge badge-video-info badge-kiss\" href=\"/profile/{slug}\"> anchor text  (badge-kiss = verified performer; exclude badge-unverified = uploader account)",
+    "tags": "Category slug from scene URL first path segment, title-cased (e.g. amateur-porn -> Amateur Porn)",
+    "studio": "Constant 'TNAFlix'"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "Parse JSON-LD VideoObject: json_ld['name']",
+      "Fallback: og:title meta tag"
+    ],
+    "date": [
+      "Parse JSON-LD VideoObject: json_ld['uploadDate']",
+      "Value format: '2013-12-09T14:30:03+00:00' -- split on 'T' and take date part"
+    ],
+    "description": [
+      "Parse JSON-LD VideoObject: json_ld['description']",
+      "If value equals 'No description provided' (case-insensitive), return empty string"
+    ],
+    "cover_image": [
+      "Parse JSON-LD VideoObject: json_ld['thumbnailUrl']",
+      "Value is a PLAIN STRING, not a list -- do not subscript with [0]",
+      "Fallback: og:image meta tag"
+    ],
+    "performers": [
+      "Regex or BeautifulSoup: find <a> tags where class contains 'badge-kiss' and href starts with '/profile/'",
+      "Strip whitespace from anchor text",
+      "Exclude any link whose class contains 'badge-unverified' (uploader account, not a performer)"
+    ],
+    "tags": [
+      "Parse category slug from scene URL: the first path segment after the domain",
+      "e.g. URL path /amateur-porn/Best-Of-Lolo-Ferrari/video563066 -> slug 'amateur-porn'",
+      "Convert: replace hyphens with spaces, apply str.title() -> 'Amateur Porn'"
+    ],
+    "studio": [
+      "Constant value: 'TNAFlix'"
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "endpoint": "https://www.tnaflix.com/search?what={query}",
+    "result_pattern": "href=\"https://www.tnaflix.com/{category}/{slug}/video{id}\"",
+    "notes": "GET request with query param 'what'. Returns HTML page with video card links. No JS challenge or blocking observed. Use SequenceMatcher to find best title match from results."
+  },
+  "fragment_matching_strategy": {
+    "supported": false,
+    "notes": "sceneByQueryFragment and sceneByFragment omitted -- fragment matching is unreliable without further testing."
+  },
+  "anti_bot_or_access_notes": [
+    "No Cloudflare or aggressive anti-bot protection observed.",
+    "Standard Firefox/Linux UA is sufficient for all page types.",
+    "Python urllib works directly; curl subprocess fallback kept per repo convention.",
+    "Scene pages, profile pages, and search all return 200 with a realistic UA.",
+    "No age-gate cookie required."
+  ],
+  "known_limitations": [
+    "No per-scene tag list -- only the category slug from the URL is available as a tag.",
+    "description is often empty ('No description provided') for user-uploaded content.",
+    "JSON-LD thumbnailUrl is a plain string (not an array); do not subscript it.",
+    "Performer profile pages have no structured bio fields (no birthdate, gender, country, measurements) -- only name and photo URL available.",
+    "sceneByQueryFragment and sceneByFragment not implemented.",
+    "studio is always hardcoded to 'TNAFlix'."
+  ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://www.tnaflix.com/amateur-porn/Best-Of-Lolo-Ferrari/video563066"
+    ],
+    "performer_urls": [
+      "https://www.tnaflix.com/profile/lolo-ferrari"
+    ],
+    "search_queries": [
+      "lolo ferrari"
+    ],
+    "fragments": []
+  },
+  "expected_scene_output": {
+    "url": "https://www.tnaflix.com/amateur-porn/Best-Of-Lolo-Ferrari/video563066",
+    "title": "Best Of Lolo Ferrari",
+    "date": "2013-12-09",
+    "description": "",
+    "image": "https://img.tnaflix.com/a16:9q80w920/thumbs/f2/12_563066l.jpg",
+    "performers": ["Lolo Ferrari"],
+    "tags": ["Amateur Porn"],
+    "studio": "TNAFlix"
+  },
+  "expected_performer_output": {
+    "url": "https://www.tnaflix.com/profile/lolo-ferrari",
+    "name": "Lolo Ferrari",
+    "image": "https://img.tnaflix.com/q80w210r/pics/alpha/pornstars/3208712.jpg"
+  },
+  "sources": [
+    "https://www.tnaflix.com/amateur-porn/Best-Of-Lolo-Ferrari/video563066",
+    "https://www.tnaflix.com/profile/lolo-ferrari",
+    "https://www.tnaflix.com/search?what=lolo+ferrari",
+    "https://github.com/stashapp/CommunityScrapers",
+    "https://github.com/stashapp/stash"
+  ]
+}

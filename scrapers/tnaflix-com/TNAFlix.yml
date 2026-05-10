@@ -1,0 +1,26 @@
+name: TNAFlix
+
+sceneByURL:
+  - action: script
+    url:
+      - tnaflix.com/
+    script:
+      - python
+      - TNAFlix.py
+      - sceneByURL
+
+sceneByName:
+  action: script
+  script:
+    - python
+    - TNAFlix.py
+    - sceneByName
+
+performerByURL:
+  - action: script
+    url:
+      - tnaflix.com/profile/
+    script:
+      - python
+      - TNAFlix.py
+      - performerByURL
