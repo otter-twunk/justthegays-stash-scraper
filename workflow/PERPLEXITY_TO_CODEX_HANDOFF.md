@@ -1,8 +1,8 @@
 # Perplexity to Codex Handoff
 
-Use this prompt after Perplexity returns the site research.
+Use this as the repo-level template.
 
-Paste the Perplexity output under `Research:` and give the full prompt to Codex.
+The preferred flow is to copy this into `scrapers/<site-folder>/PERPLEXITY_TO_CODEX_HANDOFF.md` and tailor it to the target site.
 
 ```text
 Create a working Stash scraper for SITE_URL in this repository.
@@ -18,6 +18,9 @@ Your job:
   - the scraper `.yml`
   - the backing Python script
   - a short `README.md`
+  - keep `SCRAPER_SPEC.json` as the machine-friendly research contract
+  - keep `PERPLEXITY_TO_CODEX_HANDOFF.md` in the folder as the research record
+  - update `CODEX_PROMPT.md` in the folder if implementation details change
 - Follow official Stash scraper conventions
 - Preserve existing scrapers and repo structure
 - Update the root `README.md` with the new scraper folder
@@ -39,6 +42,7 @@ Validation requirements:
 Use these repo helpers:
 - Start from `templates/site-template/`
 - Follow `workflow/NEW_SCRAPER_CHECKLIST.md`
+- Use `SCRAPER_SPEC.json` first when specific implementation details are needed
 
 Research:
 

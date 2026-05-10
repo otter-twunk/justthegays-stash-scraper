@@ -1,0 +1,75 @@
+{
+  "site_name": "JustTheGays.com",
+  "site_url": "https://justthegays.com/",
+  "folder_name": "justthegays-com",
+  "platform": "wordpress",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://justthegays.com/..."
+    ],
+    "performer": [
+      "https://justthegays.com/model/..."
+    ],
+    "search": [
+      "site search pages used by the scraper"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "scene or post title",
+    "date": "post publish date",
+    "description": "post content or details",
+    "cover_image": "featured image or primary scene image",
+    "performers": "performer taxonomy or matched search data",
+    "tags": "categories or tags when present",
+    "studio": "JustTheGays"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "implemented in JustTheGaysCom.py"
+    ],
+    "date": [
+      "implemented in JustTheGaysCom.py"
+    ],
+    "description": [
+      "implemented in JustTheGaysCom.py"
+    ],
+    "cover_image": [
+      "implemented in JustTheGaysCom.py"
+    ],
+    "performers": [
+      "implemented in JustTheGaysCom.py"
+    ],
+    "tags": [
+      "implemented in JustTheGaysCom.py"
+    ],
+    "studio": [
+      "constant site/studio value"
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "notes": "Search is used for name and fragment matching and to enrich some scene results."
+  },
+  "fragment_matching_strategy": {
+    "supported": true,
+    "notes": "Fragments are matched against title-like search results when practical."
+  },
+  "anti_bot_or_access_notes": [],
+  "known_limitations": [
+    "Some single video pages may not expose performer or category data cleanly."
+  ],
+  "validation_examples": {
+    "scene_urls": [],
+    "performer_urls": [],
+    "search_queries": [],
+    "fragments": []
+  },
+  "sources": []
+}

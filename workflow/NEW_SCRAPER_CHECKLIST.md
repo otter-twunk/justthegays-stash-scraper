@@ -14,6 +14,10 @@ Use this before publishing a new scraper to the repo.
 
 - Copy `templates/site-template/` into `scrapers/<site-folder>/`.
 - Rename the template files for the target scraper.
+- Fill in `SCRAPER_SPEC.json`.
+- Add or update `PERPLEXITY_TO_CODEX_HANDOFF.md` in the scraper folder.
+- Add or update `CODEX_PROMPT.md` in the scraper folder.
+- Update `TODO.md` during implementation.
 - Update the scraper README with site-specific notes.
 - Add the new scraper folder to the root `README.md`.
 
@@ -36,6 +40,7 @@ Use this before publishing a new scraper to the repo.
 
 - Confirm the folder contains only the scraper files and README.
 - Check for accidental temp files, caches, or local machine artifacts.
+- Run `python3 scripts/validate_scraper_repo.py`.
 - Commit with a short site-specific message.
 - Push to `main`.
 - Verify the repo renders the new files correctly on GitHub.

@@ -4,6 +4,10 @@ Files:
 
 - `SiteScraper.yml`
 - `SiteScraper.py`
+- `SCRAPER_SPEC.json`
+- `PERPLEXITY_TO_CODEX_HANDOFF.md`
+- `CODEX_PROMPT.md`
+- `TODO.md`
 
 Install:
 

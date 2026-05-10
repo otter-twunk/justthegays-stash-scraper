@@ -1,0 +1,53 @@
+{
+  "site_name": "Site Name",
+  "site_url": "SITE_URL",
+  "folder_name": "<site-folder>",
+  "platform": "",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [],
+    "performer": [],
+    "search": []
+  },
+  "metadata_mapping": {
+    "scene_title": "",
+    "date": "",
+    "description": "",
+    "cover_image": "",
+    "performers": "",
+    "tags": "",
+    "studio": ""
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [],
+    "date": [],
+    "description": [],
+    "cover_image": [],
+    "performers": [],
+    "tags": [],
+    "studio": []
+  },
+  "search_strategy": {
+    "supported": false,
+    "notes": ""
+  },
+  "fragment_matching_strategy": {
+    "supported": false,
+    "notes": ""
+  },
+  "anti_bot_or_access_notes": [],
+  "known_limitations": [],
+  "validation_examples": {
+    "scene_urls": [],
+    "performer_urls": [],
+    "search_queries": [],
+    "fragments": []
+  },
+  "sources": []
+}

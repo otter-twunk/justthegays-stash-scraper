@@ -1,0 +1,73 @@
+{
+  "site_name": "JustTheGays.tv",
+  "site_url": "https://justthegays.tv/",
+  "folder_name": "justthegays-tv",
+  "platform": "custom",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://justthegays.tv/video/..."
+    ],
+    "performer": [
+      "https://justthegays.tv/model/..."
+    ],
+    "search": [
+      "site search pages used by the scraper"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "scene detail page title",
+    "date": "scene detail page release date",
+    "description": "scene detail page body/details",
+    "cover_image": "scene thumbnail or primary image",
+    "performers": "scene page performers or related model links",
+    "tags": "scene categories or tags when present",
+    "studio": "JustTheGays"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "implemented in JustTheGays.py"
+    ],
+    "date": [
+      "implemented in JustTheGays.py"
+    ],
+    "description": [
+      "implemented in JustTheGays.py"
+    ],
+    "cover_image": [
+      "implemented in JustTheGays.py"
+    ],
+    "performers": [
+      "implemented in JustTheGays.py"
+    ],
+    "tags": [
+      "implemented in JustTheGays.py"
+    ],
+    "studio": [
+      "constant site/studio value"
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "notes": "Name and fragment hooks use the site search flow."
+  },
+  "fragment_matching_strategy": {
+    "supported": true,
+    "notes": "Filename or title fragments are matched against search results."
+  },
+  "anti_bot_or_access_notes": [],
+  "known_limitations": [],
+  "validation_examples": {
+    "scene_urls": [],
+    "performer_urls": [],
+    "search_queries": [],
+    "fragments": []
+  },
+  "sources": []
+}

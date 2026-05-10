@@ -1,6 +1,8 @@
 # Perplexity Research Input
 
-Use this prompt before asking Codex to build a new scraper:
+Use this prompt before asking Codex to build a new scraper.
+
+This version is designed to increase handoff automation by having Perplexity draft the folder-local workflow files that Codex can start from.
 
 ```text
 Research how to build a Stash scraper for SITE_URL.
@@ -33,6 +35,10 @@ Please do all of the following:
    - sceneByFragment
    - performerByURL
 7. Suggest a short URL-safe folder name for adding this scraper to the repo `otter-twunk/my-scrapers` under `scrapers/<folder-name>/`.
+8. Draft the full contents for `scrapers/<folder-name>/SCRAPER_SPEC.json` using a machine-friendly structure.
+9. Draft the full contents for these two files inside that folder:
+   - `scrapers/<folder-name>/PERPLEXITY_TO_CODEX_HANDOFF.md`
+   - `scrapers/<folder-name>/CODEX_PROMPT.md`
 
 Output format:
 - Short implementation summary
@@ -41,5 +47,8 @@ Output format:
 - Suggested selectors or parsing approach
 - Known limitations
 - Suggested folder name
+- Full content for `SCRAPER_SPEC.json`
+- Full content for `PERPLEXITY_TO_CODEX_HANDOFF.md`
+- Full content for `CODEX_PROMPT.md`
 - Source links
 ```

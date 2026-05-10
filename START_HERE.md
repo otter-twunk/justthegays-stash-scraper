@@ -5,9 +5,13 @@ This repo is set up for a repeatable Stash scraper workflow.
 ## Fastest Path
 
 1. Run the research prompt in `workflow/PERPLEXITY_RESEARCH_INPUT.md`.
-2. Paste the result into `workflow/PERPLEXITY_TO_CODEX_HANDOFF.md`.
-3. Give that handoff prompt to Codex.
-4. Validate the finished scraper with `workflow/NEW_SCRAPER_CHECKLIST.md`.
+2. Run `scripts/create_scraper_from_template.sh <site-folder>`.
+3. Have Perplexity fill in the new folder, especially:
+   - `SCRAPER_SPEC.json`
+   - `PERPLEXITY_TO_CODEX_HANDOFF.md`
+   - `CODEX_PROMPT.md`
+4. Give Codex the prompt in `workflow/SIMPLE_CODEX_START.md`.
+5. Validate the finished scraper with `workflow/NEW_SCRAPER_CHECKLIST.md`.
 
 ## If You Want Codex To Work Directly
 
@@ -24,6 +28,10 @@ Each scraper folder should contain:
 - the `.yml` scraper definition
 - the backing Python script
 - a short `README.md`
+- `SCRAPER_SPEC.json`
+- `PERPLEXITY_TO_CODEX_HANDOFF.md`
+- `CODEX_PROMPT.md`
+- `TODO.md`
 
 ## Starting Template
 
@@ -38,3 +46,4 @@ Copy it, rename the files, then implement the site-specific logic.
 Before publishing, run through:
 
 - `workflow/NEW_SCRAPER_CHECKLIST.md`
+- `python3 scripts/validate_scraper_repo.py`
