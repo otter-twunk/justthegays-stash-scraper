@@ -1,0 +1,40 @@
+name: Gay0Day
+
+sceneByURL:
+  - action: script
+    url:
+      - gay0day.com/videos/
+    script:
+      - python
+      - Gay0Day.py
+      - sceneByURL
+
+sceneByName:
+  action: script
+  script:
+    - python
+    - Gay0Day.py
+    - sceneByName
+
+sceneByQueryFragment:
+  action: script
+  script:
+    - python
+    - Gay0Day.py
+    - sceneByQueryFragment
+
+sceneByFragment:
+  action: script
+  script:
+    - python
+    - Gay0Day.py
+    - sceneByFragment
+
+performerByURL:
+  - action: script
+    url:
+      - gay0day.com/models/
+    script:
+      - python
+      - Gay0Day.py
+      - performerByURL
