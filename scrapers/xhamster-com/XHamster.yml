@@ -1,0 +1,43 @@
+# XHamster scraper stub
+# Codex should replace this with the real Stash YAML definition wired to XHamster.py
+
+name: XHamster
+sceneByURL:
+  - action: script
+    script:
+      - python3
+      - XHamster.py
+      - sceneByURL
+    scraper: XHamster
+
+sceneByName:
+  - action: script
+    script:
+      - python3
+      - XHamster.py
+      - sceneByName
+    scraper: XHamster
+
+sceneByQueryFragment:
+  - action: script
+    script:
+      - python3
+      - XHamster.py
+      - sceneByQueryFragment
+    scraper: XHamster
+
+sceneByFragment:
+  - action: script
+    script:
+      - python3
+      - XHamster.py
+      - sceneByFragment
+    scraper: XHamster
+
+performerByURL:
+  - action: script
+    script:
+      - python3
+      - XHamster.py
+      - performerByURL
+    scraper: XHamster

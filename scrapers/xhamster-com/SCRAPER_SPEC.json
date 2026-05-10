@@ -1,0 +1,91 @@
+{
+  "site_name": "xHamster",
+  "site_url": "https://xhamster.com/",
+  "folder_name": "xhamster-com",
+  "platform": "custom tube (window.initials JSON, no JSON-LD)",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://xhamster.com/videos/{slug}-{idHashSlug}",
+      "https://xhamster.com/videos/{idHashSlug}"
+    ],
+    "performer": [
+      "https://xhamster.com/pornstars/{slug}"
+    ],
+    "search": [
+      "https://xhamster.com/search/{query}"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "window.initials.videoModel.title (also videoEntity.title, og:title)",
+    "date": "videoModel.created (UNIX seconds) -> UTC date yyyy-mm-dd",
+    "description": "videoModel.description (full synopsis text)",
+    "cover_image": "videoModel.thumbURL (big 16:9 thumb)",
+    "performers": "videoEntity.pornstarModels[].name; also videoTagsComponent.tags[] where isPornstar==true",
+    "tags": "videoTagsComponent.tags[] where isCategory==true OR isTag==true -> name",
+    "studio": "videoModel.channelModel.channelName (xHamster channel / paysite name)"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "Parse window.initials JSON via json.JSONDecoder().raw_decode starting right after 'window.initials='.",
+      "Use obj['videoModel']['title'] as primary.",
+      "Fallback: obj['videoEntity']['title'].",
+      "Last fallback: <meta property='og:title'> or <title> stripped of ' - xHamster'."
+    ],
+    "date": [
+      "Take unix_ts = obj['videoModel']['created'] (integer, seconds).",
+      "Convert via datetime.utcfromtimestamp(unix_ts).strftime('%Y-%m-%d')."
+    ],
+    "description": [
+      "Use obj['videoModel']['description'].",
+      "If missing, fallback to obj['videoEntity']['description'].",
+      "If still missing, use <meta property='og:description'>."
+    ],
+    "cover_image": [
+      "Use obj['videoModel']['thumbURL'].",
+      "If absent, fallback to obj['videoEntity']['thumbBig'] or first entry in obj['videoEntity']['thumbs']."
+    ],
+    "performers": [
+      "Preferred: obj['videoEntity']['pornstarModels'] -> each item has 'name', 'inurl', 'gender', 'country', 'alias'.",
+      "Augment with tags where tag['isPornstar'] is true in obj['videoTagsComponent']['tags'].",
+      "Map to Stash performer objects: name, url (https://xhamster.com/pornstars/{inurl}), gender, country, aliases."
+    ],
+    "tags": [
+      "Iterate obj['videoTagsComponent']['tags'].",
+      "Include entries where tag['isCategory'] or tag['isTag'] is true.",
+      "Use tag['name'] as tag text.",
+      "Exclude items where tag['isPornstar'] is true (handled as performers)."
+    ],
+    "studio": [
+      "Use obj['videoModel']['channelModel']['channelName'] if present.",
+      "channelModel also provides channelURL for the channel page."
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "notes": "'/search/{query}' returns HTML search results without Cloudflare challenge. Scene links use full slug+idHashSlug format. Implement sceneByName and sceneByQueryFragment by hitting the search URL with URL-encoded query, then selecting the best match by title similarity and/or fragment occurrence in the URL."
+  },
+  "fragment_matching_strategy": {
+    "supported": true,
+    "notes": "sceneByFragment/sceneByQueryFragment can be implemented on top of the search page by sending the fragment as the query value and ranking results locally. If the fragment contains the idHashSlug (e.g. xhk23el), substring match against candidate URLs is a strong signal."
+  },
+  "anti_bot_or_access_notes": [
+    "No Cloudflare JS challenge observed on scene, search, or performer pages when sending a realistic desktop Firefox User-Agent and 'age_verified=1' cookie.",
+    "All metadata is embedded in the window.initials JSON blob; no additional API calls required.",
+    "Pages are large (300KB+ of HTML + JSON); keep parsing targeted to the 'window.initials=' segment for performance.",
+    "Set explicit Accept, Accept-Language headers. Include Referer when following search results if needed."
+  ],
+  "known_limitations": [
+    "Performer pages at '/pornstars/{slug}' expose only minimal structured info in 'window.initials.channelInfo' (id, slug, orientation, type). Full bio/measurements are not available in window.initials and would need heavier HTML parsing or additional API exploration.",
+    "Some videos may not have pornstarModels populated; in those cases performers will be taken solely from tags where isPornstar==true.",
+    "xHamster uses alphanumeric idHashSlug codes (e.g. xhk23el) not numeric IDs. Filenames containing only numbers will require string-based fragment search.",
+    "Long or non-Latin titles may yield weaker search-based matching for sceneByName/fragment; rank carefully and consider returning no result if confidence is low."
+  ],
+  "validated_scene": "https://xhamster.com/videos/day-1-seven-slave-intake-xhk23el"
+}
