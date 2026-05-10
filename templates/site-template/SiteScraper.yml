@@ -1,0 +1,13 @@
+name: SiteScraper
+description: Stash scraper for SITE_URL
+version: 1.0
+exec:
+  - python3
+  - "{scraperDir}/SiteScraper.py"
+interface: rawJson
+hooks:
+  - name: sceneByURL
+  - name: sceneByName
+  - name: sceneByQueryFragment
+  - name: sceneByFragment
+  - name: performerByURL
