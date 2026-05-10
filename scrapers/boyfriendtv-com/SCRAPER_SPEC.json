@@ -1,0 +1,98 @@
+{
+  "site_name": "BoyFriendTV",
+  "site_url": "https://www.boyfriendtv.com/",
+  "folder_name": "boyfriendtv-com",
+  "platform": "custom tube (Cloudflare-protected)",
+  "supported_hooks": [
+    "sceneByURL",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://www.boyfriendtv.com/videos/{id}/{slug}/"
+    ],
+    "performer": [
+      "https://www.boyfriendtv.com/pornstars/{slug}/"
+    ],
+    "search": [
+      "https://www.boyfriendtv.com/search/?q={query}  -- Cloudflare blocks headless requests; not reliable"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "JSON-LD VideoObject > name  (also og:title, also <title> minus ' | BoyFriendTV')",
+    "date": "JSON-LD VideoObject > uploadDate (ISO-8601, strip to YYYY-MM-DD)",
+    "description": "JSON-LD VideoObject > description  (comma-separated tag list on user-uploaded content; proper description on studio content)",
+    "cover_image": "JSON-LD VideoObject > thumbnailUrl[0]  (cdn77-t.boyfriendtv.com full-size thumb)",
+    "performers": "JSON-LD VideoObject > actor[].name  (also href=/pornstars/{slug}/videos/ links in page body)",
+    "tags": "JSON-LD VideoObject > keywords[]  (also href=/tags/{slug}/ anchor text in page body)",
+    "studio": "Constant 'BoyFriendTV' (no per-channel JSON-LD; channel links exist as /channels/{slug}/ but structure varies)"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "Parse JSON-LD VideoObject: json_ld['name']",
+      "Fallback: og:title meta tag",
+      "Fallback: <title> tag, strip ' | BoyFriendTV' suffix"
+    ],
+    "date": [
+      "Parse JSON-LD VideoObject: json_ld['uploadDate']",
+      "Value format: '2025-06-07T15:17:02+00:00' -- split on T and take date part"
+    ],
+    "description": [
+      "Parse JSON-LD VideoObject: json_ld['description']",
+      "Note: for user-uploaded clips this is a comma-separated list of tags, not a narrative description"
+    ],
+    "cover_image": [
+      "Parse JSON-LD VideoObject: json_ld['thumbnailUrl'][0]",
+      "Full-size CDN URL: cdn77-t.boyfriendtv.com/b-boyfriendtv/thumbs/bftv-full/..."
+    ],
+    "performers": [
+      "Parse JSON-LD VideoObject: json_ld['actor'] list -> each item has 'name' and 'url'",
+      "Fallback: CSS selector 'a[href^=\"/pornstars/\"][href$=\"/videos/\"]' to get performer names from page HTML"
+    ],
+    "tags": [
+      "Parse JSON-LD VideoObject: json_ld['keywords'] list",
+      "Fallback: CSS selector 'a[href^=\"/tags/\"]' anchor text in page HTML"
+    ],
+    "studio": [
+      "Constant value: 'BoyFriendTV'"
+    ]
+  },
+  "search_strategy": {
+    "supported": false,
+    "notes": "https://www.boyfriendtv.com/search/?q={query} exists but Cloudflare returns a JS challenge page for script/headless requests. The scene URL endpoint does NOT trigger Cloudflare when a realistic browser UA and Accept headers are sent. Search and performer pages consistently trigger the challenge. sceneByName and sceneByQueryFragment/sceneByFragment are therefore not reliably implementable without a JS-capable browser (e.g. playwright/selenium), which would be a heavy dependency. Recommend disabling them or documenting as unsupported until a workaround is found."
+  },
+  "fragment_matching_strategy": {
+    "supported": false,
+    "notes": "Depends on search, which is blocked by Cloudflare for script requests. Not practical."
+  },
+  "anti_bot_or_access_notes": [
+    "Cloudflare Managed Challenge is active on the site root, search pages (/search/), performer pages (/pornstars/), and the homepage.",
+    "Scene detail pages (/videos/{id}/{slug}/) can be fetched successfully with a realistic Firefox/Linux UA, correct Accept and Accept-Language headers, and an 'age_verified=1' cookie. No JS execution needed for scene pages.",
+    "A curl fallback (subprocess) is viable for scene pages; Python urllib also works.",
+    "Do NOT rely on requests without a CF bypass for search or performer routes.",
+    "Age gate cookie required: set 'age_verified=1' in request headers."
+  ],
+  "known_limitations": [
+    "sceneByName, sceneByQueryFragment, and sceneByFragment are not supported due to Cloudflare blocking search routes.",
+    "performerByURL is blocked by Cloudflare — performer pages trigger JS challenge. The scraper can return partial data (name from URL slug, gender constant) but bio details and photo require a JS-capable fetch.",
+    "The JSON-LD 'description' field on user-uploaded clips is tag text, not a narrative synopsis.",
+    "No per-scene studio/channel field in JSON-LD; studio is always 'BoyFriendTV'.",
+    "CDN URL structure for thumbnails includes a date path segment (e.g. 2025-06/) which makes thumbnail URLs non-reconstructable without fetching the scene page."
+  ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://www.boyfriendtv.com/videos/1426460/selector/"
+    ],
+    "performer_urls": [
+      "https://www.boyfriendtv.com/pornstars/scott-demarco-2077/"
+    ],
+    "search_queries": [],
+    "fragments": []
+  },
+  "sources": [
+    "https://www.boyfriendtv.com/videos/1426460/selector/",
+    "https://www.boyfriendtv.com/pornstars/scott-demarco-2077/",
+    "https://github.com/stashapp/CommunityScrapers",
+    "https://github.com/stashapp/stash"
+  ]
+}

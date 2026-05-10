@@ -1,0 +1,19 @@
+name: BoyFriendTV
+
+sceneByURL:
+  - action: script
+    url:
+      - boyfriendtv.com/videos/
+    script:
+      - python
+      - BoyFriendTV.py
+      - sceneByURL
+
+performerByURL:
+  - action: script
+    url:
+      - boyfriendtv.com/pornstars/
+    script:
+      - python
+      - BoyFriendTV.py
+      - performerByURL
