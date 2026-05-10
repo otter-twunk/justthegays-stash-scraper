@@ -2,6 +2,17 @@
 
 Stash Python script scraper for [gay0day.com](https://gay0day.com/).
 
+Files:
+
+- `Gay0Day.yml`
+- `Gay0Day.py`
+
+Install:
+
+1. Copy both files into your Stash `scrapers` directory.
+2. Ensure the Python environment Stash uses has `requests` and `beautifulsoup4` installed.
+3. In Stash, reload scrapers or restart the app.
+
 ## Supported Hooks
 
 | Hook                   | Description                                        |
@@ -20,14 +31,19 @@ Stash Python script scraper for [gay0day.com](https://gay0day.com/).
 
 ## Metadata
 
-Extracts: title, approximate date, description, cover image, performers, tags.
+Extracts: title, date, description, cover image, performers, tags.
 Studio is hardcoded as `Gay0Day` (tube aggregator — no per-scene studio field).
 
 ## Known Limitations
 
-- Date is a relative string (e.g. "6 years ago") — converted to approximate ISO date
+- Some pages expose performer links cleanly, while others only expose tags/categories
 - Performer profile fields are often empty on this site
-- No API or structured data — relies on HTML parsing
+- Search results can be broad for short fragments
+
+## Notes
+
+- Scene pages currently expose `VideoObject` JSON-LD, so published dates are taken from structured data when available.
+- Scene search returns a list of matching result cards from the site's own search page.
 
 ## Files
 

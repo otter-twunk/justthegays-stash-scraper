@@ -38,6 +38,7 @@ Current scrapers:
 
 - `scrapers/justthegays-tv`
 - `scrapers/justthegays-com`
+- `scrapers/gay0day-com`
 
 ## Workflow
 
