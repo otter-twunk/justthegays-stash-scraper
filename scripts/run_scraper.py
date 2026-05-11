@@ -33,6 +33,7 @@ def find_scraper_script(site: str) -> Path:
     scripts = sorted(
         path
         for path in folder.glob("*.py")
+        # Allow optional folder-local helper launchers while keeping the main scraper script.
         if "_vendor" not in path.parts and path.name != "run.py"
     )
     if not scripts:
@@ -71,7 +72,6 @@ def normalize_output(parsed: Any) -> dict[str, Any]:
 
 
 def run_scraper(script_path: Path, interface: str, mode: str, payload: dict[str, Any]) -> subprocess.CompletedProcess[str]:
-    stdin_payload: dict[str, Any]
     command = [sys.executable, str(script_path)]
 
     if interface == "argv":
