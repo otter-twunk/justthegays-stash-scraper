@@ -1,0 +1,9 @@
+name: ThisVidScraper
+description: Stash scraper for https://thisvid.com
+version: 1.0
+exec:
+  - python3
+  - "{scraperDir}/ThisVidScraper.py"
+interface: rawJson
+hooks:
+  - name: sceneByURL

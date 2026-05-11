@@ -1,0 +1,64 @@
+{
+  "site_name": "thisvid.com",
+  "site_url": "https://thisvid.com",
+  "folder_name": "thisvid",
+  "platform": "Custom community video site",
+  "supported_hooks": [
+    "sceneByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://thisvid.com/videos/<slug>/"
+    ],
+    "performer": [],
+    "search": []
+  },
+  "metadata_mapping": {
+    "scene_title": "og:title or page <title>",
+    "date": "Likely page metadata or structured data — requires live scene parse to confirm",
+    "description": "og:description",
+    "cover_image": "og:image",
+    "performers": "Member/uploader links if present on scene page",
+    "tags": "Category or tag links on scene page",
+    "studio": "Not confirmed; site is community-upload focused"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": ["og:title", "h1"],
+    "date": ["structured data or page text — TBC during implementation"],
+    "description": ["og:description"],
+    "cover_image": ["og:image"],
+    "performers": ["a[href*='/members/']"],
+    "tags": ["a[href*='/categories/']"],
+    "studio": []
+  },
+  "search_strategy": {
+    "supported": false,
+    "notes": "Search endpoint not confirmed during research; implement sceneByURL first."
+  },
+  "fragment_matching_strategy": {
+    "supported": false,
+    "notes": "Slug-based URLs not suitable for title-based fragment matching."
+  },
+  "anti_bot_or_access_notes": [
+    "Site uses slug-based URLs; numeric-ID guessing returned 404.",
+    "Expect anti-bot or session constraints on rapid crawling.",
+    "Start discovery from listing pages rather than guessing video IDs.",
+    "Use browser-grade headers and introduce request delays."
+  ],
+  "known_limitations": [
+    "Scene URL structure uses slugs, not numeric IDs — listing-first discovery required.",
+    "Performer/member pages not confirmed during research.",
+    "Search support unconfirmed.",
+    "Full metadata availability requires live scene page fetch during implementation."
+  ],
+  "validation_examples": {
+    "scene_urls": ["https://thisvid.com/videos/blonde-anal-fun/"],
+    "performer_urls": [],
+    "search_queries": [],
+    "fragments": []
+  },
+  "sources": [
+    "https://thisvid.com",
+    "Perplexity live site inspection May 2026"
+  ]
+}
