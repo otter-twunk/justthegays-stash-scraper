@@ -1,39 +1,54 @@
 # xHamster Stash Scraper
 
-This folder contains the implementation scaffold and research notes for a Stash script scraper targeting **xHamster** (https://xhamster.com/).
+Stash scraper for [xhamster.com](https://xhamster.com/).
 
 ## Supported hooks
 
 | Hook | Status |
 |---|---|
-| `sceneByURL` | To be implemented |
-| `sceneByName` | To be implemented |
-| `sceneByQueryFragment` | To be implemented |
-| `sceneByFragment` | To be implemented |
-| `performerByURL` | To be implemented |
+| `sceneByURL` | Supported |
+| `sceneByName` | Supported |
+| `sceneByQueryFragment` | Supported |
+| `sceneByFragment` | Supported |
+| `performerByURL` | Supported |
+
+## Install
+
+1. Copy `XHamster.py` and `XHamster.yml` into your Stash `scrapers/` directory.
+2. Reload scrapers in Stash or restart the app.
 
 ## Files
 
 - `SCRAPER_SPEC.json` — machine-friendly contract: supported modes, URL patterns, metadata mappings
 - `PERPLEXITY_TO_CODEX_HANDOFF.md` — detailed research notes and implementation guidance for Codex
 - `CODEX_PROMPT.md` — concise Codex starting prompt focused on this folder
-- `XHamster.py` — Python script scraper implementation *(to be created by Codex)*
-- `XHamster.yml` — Stash scraper definition file *(stub, to be completed by Codex)*
+- `XHamster.py` — Python script scraper implementation
+- `XHamster.yml` — Stash scraper definition file
 - `TODO.md` — implementation checklist
 
 ## Platform notes
 
-- Custom tube site, no WordPress, no Cloudflare challenge observed
-- All metadata embedded in `window.initials` JSON on each page — no JSON-LD, no extra API calls
+- Custom tube site using a large `window.initials` JSON blob on scene, search, and performer pages
+- No JSON-LD required for the main scrape flow
 - Scene URLs: `https://xhamster.com/videos/{slug}-{idHashSlug}`
 - Performer URLs: `https://xhamster.com/pornstars/{slug}`
 - Search: `https://xhamster.com/search/{query}`
 
 ## Known limitations
 
-- Performer bio details (height, measurements, etc.) are not available in `window.initials`; only minimal info (name, slug, avatar) is reliably accessible
+- Performer bio details (height, measurements, social links, etc.) are not exposed cleanly in `window.initials`; performer scraping is intentionally minimal
 - Some scenes have no pornstar metadata; performers fall back to `isPornstar` tags only
-- Non-Latin or very long scene titles may reduce fragment/search match quality
+- Search-based title and fragment matching is conservative; long or non-Latin titles may return no match instead of a weak guess
+- In Australia, xHamster currently injects an age-verification banner into page HTML. The scraper ignores it and reads the embedded metadata instead.
+
+## Test URLs
+
+- Scenes:
+  - `https://xhamster.com/videos/day-1-seven-slave-intake-xhk23el`
+  - `https://xhamster.com/videos/the-training-of-number-seven-day-one-xhu06Uo`
+- Performers:
+  - `https://xhamster.com/pornstars/coffee-brown`
+  - `https://xhamster.com/pornstars/emma-haize`
 
 ## Codex start
 

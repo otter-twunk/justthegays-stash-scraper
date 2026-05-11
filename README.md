@@ -42,6 +42,7 @@ Current scrapers:
 - `scrapers/gayporntube-com`
 - `scrapers/mymusclevideo-com`
 - `scrapers/tnaflix-com`
+- `scrapers/xhamster-com`
 
 ## Workflow
 

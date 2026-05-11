@@ -87,5 +87,30 @@
     "xHamster uses alphanumeric idHashSlug codes (e.g. xhk23el) not numeric IDs. Filenames containing only numbers will require string-based fragment search.",
     "Long or non-Latin titles may yield weaker search-based matching for sceneByName/fragment; rank carefully and consider returning no result if confidence is low."
   ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://xhamster.com/videos/day-1-seven-slave-intake-xhk23el",
+      "https://xhamster.com/videos/the-training-of-number-seven-day-one-xhu06Uo"
+    ],
+    "performer_urls": [
+      "https://xhamster.com/pornstars/coffee-brown",
+      "https://xhamster.com/pornstars/emma-haize"
+    ],
+    "search_queries": [
+      "Day 1- seven slave intake",
+      "The Training of Number Seven, Day One"
+    ],
+    "fragments": [
+      "day-1-seven-slave-intake-xhk23el",
+      "xhk23el"
+    ]
+  },
+  "sources": [
+    "https://xhamster.com/videos/day-1-seven-slave-intake-xhk23el",
+    "https://xhamster.com/search/day+1+seven+slave+intake",
+    "https://xhamster.com/pornstars/coffee-brown",
+    "https://github.com/stashapp/CommunityScrapers",
+    "https://github.com/stashapp/stash"
+  ],
   "validated_scene": "https://xhamster.com/videos/day-1-seven-slave-intake-xhk23el"
 }

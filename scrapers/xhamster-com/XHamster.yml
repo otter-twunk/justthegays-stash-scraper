@@ -1,43 +1,41 @@
-# XHamster scraper stub
-# Codex should replace this with the real Stash YAML definition wired to XHamster.py
-
 name: XHamster
+description: Stash scraper for xhamster.com
+
 sceneByURL:
   - action: script
+    url:
+      - xhamster.com/videos/
     script:
       - python3
       - XHamster.py
       - sceneByURL
-    scraper: XHamster
 
 sceneByName:
-  - action: script
-    script:
-      - python3
-      - XHamster.py
-      - sceneByName
-    scraper: XHamster
+  action: script
+  script:
+    - python3
+    - XHamster.py
+    - sceneByName
 
 sceneByQueryFragment:
-  - action: script
-    script:
-      - python3
-      - XHamster.py
-      - sceneByQueryFragment
-    scraper: XHamster
+  action: script
+  script:
+    - python3
+    - XHamster.py
+    - sceneByQueryFragment
 
 sceneByFragment:
-  - action: script
-    script:
-      - python3
-      - XHamster.py
-      - sceneByFragment
-    scraper: XHamster
+  action: script
+  script:
+    - python3
+    - XHamster.py
+    - sceneByFragment
 
 performerByURL:
   - action: script
+    url:
+      - xhamster.com/pornstars/
     script:
       - python3
       - XHamster.py
       - performerByURL
-    scraper: XHamster
