@@ -47,3 +47,31 @@ Stash scraper for [manporn.xxx](https://manporn.xxx/).
 - All scene metadata is expected in the `application/ld+json` VideoObject block on each scene page.
 - Nearest comparable scraper in this repo: `scrapers/boyfriendtv-com/` (same Cloudflare + JSON-LD pattern).
 - See `SCRAPER_SPEC.json` for the full research record and `PERPLEXITY_TO_CODEX_HANDOFF.md` for implementation notes.
+
+
+## Command-line execution
+
+Run this scraper through the repository CLI wrapper:
+
+```bash
+python scripts/run_scraper.py --site manporn-xxx --mode <supported-mode> [--url <scene-url>] [--name <scene-name>]
+```
+
+Standardized output format:
+
+```json
+{"results": [{"title": "Example", "url": "https://example.com/video"}]}
+```
+
+Configuration:
+
+- Runtime dependencies are installed from the repository root `requirements.txt`.
+- No site credentials are required for default metadata scraping.
+
+Testing:
+
+```bash
+pytest -q
+```
+
+The test suite includes a CLI smoke test for this scraper (`unsupportedMode` path) to verify executable entrypoint and valid JSON output.

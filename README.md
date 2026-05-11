@@ -125,3 +125,58 @@ Each scraper folder can also include:
 - `TODO.md`: implementation progress checklist
 
 The recommended automated flow is to have Perplexity initiate the research, choose the folder structure, populate `SCRAPER_SPEC.json`, and draft the folder-local workflow files before Codex starts implementation.
+
+## Unified CLI Runner
+
+Use one command to execute any scraper with normalized JSON output:
+
+```bash
+python scripts/run_scraper.py --site <site-folder> --mode <supported-mode> [--url <scene-url>] [--name <query>]
+```
+
+Examples:
+
+```bash
+python scripts/run_scraper.py --site xvideos --mode sceneByName --name "example title"
+python scripts/run_scraper.py --site allboner --mode sceneByURL --url "https://www.allboner.com/videos/123/example/"
+```
+
+Output format is standardized as:
+
+```json
+{"results": []}
+```
+
+## Dependencies
+
+All runtime and test dependencies are centralized in:
+
+- `requirements.txt`
+
+Install them with:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+## Testing and CI
+
+Run local checks:
+
+```bash
+python scripts/validate_scraper_repo.py
+pytest -q
+```
+
+GitHub Actions workflow:
+
+- `.github/workflows/tests.yml`
+
+## Audit and Verification Report
+
+See `SCRAPER_AUDIT_REPORT.md` for:
+
+- per-scraper status
+- changes applied
+- test outcomes
+- remaining follow-up items

@@ -47,3 +47,31 @@ Stash scraper for [icegaytube.tv](https://www.icegaytube.tv/).
 - No Cloudflare challenge detected during research. Standard urllib/curl fetch with a realistic User-Agent and `age_verified=1` cookie should be sufficient.
 - Primary metadata source is `og:*` meta tags. JSON-LD is used as a secondary fallback.
 - See `SCRAPER_SPEC.json` for the full research record and `PERPLEXITY_TO_CODEX_HANDOFF.md` for implementation notes.
+
+
+## Command-line execution
+
+Run this scraper through the repository CLI wrapper:
+
+```bash
+python scripts/run_scraper.py --site icegaytube-tv --mode <supported-mode> [--url <scene-url>] [--name <scene-name>]
+```
+
+Standardized output format:
+
+```json
+{"results": [{"title": "Example", "url": "https://example.com/video"}]}
+```
+
+Configuration:
+
+- Runtime dependencies are installed from the repository root `requirements.txt`.
+- No site credentials are required for default metadata scraping.
+
+Testing:
+
+```bash
+pytest -q
+```
+
+The test suite includes a CLI smoke test for this scraper (`unsupportedMode` path) to verify executable entrypoint and valid JSON output.

@@ -58,3 +58,31 @@ routes have no server-rendered data and cannot be scraped without a JS-capable h
 - An `age_verified=1` cookie is sent automatically by the scraper.
 - Live validation on `https://www.thegay.com/video/748987/bareback-gay-sex-with-jerk/`
   currently returns title, date, image, and tags successfully.
+
+
+## Command-line execution
+
+Run this scraper through the repository CLI wrapper:
+
+```bash
+python scripts/run_scraper.py --site thegay-com --mode <supported-mode> [--url <scene-url>] [--name <scene-name>]
+```
+
+Standardized output format:
+
+```json
+{"results": [{"title": "Example", "url": "https://example.com/video"}]}
+```
+
+Configuration:
+
+- Runtime dependencies are installed from the repository root `requirements.txt`.
+- No site credentials are required for default metadata scraping.
+
+Testing:
+
+```bash
+pytest -q
+```
+
+The test suite includes a CLI smoke test for this scraper (`unsupportedMode` path) to verify executable entrypoint and valid JSON output.

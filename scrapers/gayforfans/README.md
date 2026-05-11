@@ -30,3 +30,31 @@ Known limitations:
 - Scene descriptions are site-generated marketing text, not always creator-written synopses.
 - Tags come from category-style keywords and intentionally drop the generic `Video` category.
 - Search and fragment matching rely on the site search endpoint, so weak filenames may still miss the correct scene.
+
+
+## Command-line execution
+
+Run this scraper through the repository CLI wrapper:
+
+```bash
+python scripts/run_scraper.py --site gayforfans --mode <supported-mode> [--url <scene-url>] [--name <scene-name>]
+```
+
+Standardized output format:
+
+```json
+{"results": [{"title": "Example", "url": "https://example.com/video"}]}
+```
+
+Configuration:
+
+- Runtime dependencies are installed from the repository root `requirements.txt`.
+- No site credentials are required for default metadata scraping.
+
+Testing:
+
+```bash
+pytest -q
+```
+
+The test suite includes a CLI smoke test for this scraper (`unsupportedMode` path) to verify executable entrypoint and valid JSON output.

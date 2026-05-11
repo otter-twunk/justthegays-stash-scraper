@@ -35,3 +35,31 @@ Known limitations:
 - Studio/source links not confirmed — may not be populated for all content.
 - Search pagination appears to be AJAX-driven; this scraper currently searches the first HTML page only.
 - Platform appears KVS-like but exact CMS unconfirmed — avoid hardcoding KVS-specific assumptions.
+
+
+## Command-line execution
+
+Run this scraper through the repository CLI wrapper:
+
+```bash
+python scripts/run_scraper.py --site everydayporn --mode <supported-mode> [--url <scene-url>] [--name <scene-name>]
+```
+
+Standardized output format:
+
+```json
+{"results": [{"title": "Example", "url": "https://example.com/video"}]}
+```
+
+Configuration:
+
+- Runtime dependencies are installed from the repository root `requirements.txt`.
+- No site credentials are required for default metadata scraping.
+
+Testing:
+
+```bash
+pytest -q
+```
+
+The test suite includes a CLI smoke test for this scraper (`unsupportedMode` path) to verify executable entrypoint and valid JSON output.

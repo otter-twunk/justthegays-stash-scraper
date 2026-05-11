@@ -42,3 +42,31 @@ Stash scraper for [mymusclevideo.com](https://mymusclevideo.com/) — a custom m
 - **Model pages are login-gated**: `performerByURL` is not implemented.
 - **Visible date is relative** (`"5 years ago"`): the scraper uses `og:video:release_date` for the real date.
 - **Search results can contain near-duplicates**: `sceneByName` deduplicates by video ID and returns search-page metadata, not a fully scraped scene payload.
+
+
+## Command-line execution
+
+Run this scraper through the repository CLI wrapper:
+
+```bash
+python scripts/run_scraper.py --site mymusclevideo-com --mode <supported-mode> [--url <scene-url>] [--name <scene-name>]
+```
+
+Standardized output format:
+
+```json
+{"results": [{"title": "Example", "url": "https://example.com/video"}]}
+```
+
+Configuration:
+
+- Runtime dependencies are installed from the repository root `requirements.txt`.
+- No site credentials are required for default metadata scraping.
+
+Testing:
+
+```bash
+pytest -q
+```
+
+The test suite includes a CLI smoke test for this scraper (`unsupportedMode` path) to verify executable entrypoint and valid JSON output.
