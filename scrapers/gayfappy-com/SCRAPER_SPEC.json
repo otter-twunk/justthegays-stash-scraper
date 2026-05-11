@@ -1,0 +1,139 @@
+{
+  "site_name": "Gay Fappy",
+  "site_url": "https://gayfappy.com/",
+  "folder_name": "gayfappy-com",
+  "platform": "wordpress",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment"
+  ],
+  "unsupported_hooks": [
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://gayfappy.com/index.php/{id}/{slug}/"
+    ],
+    "search": [
+      "https://gayfappy.com/?s={query}"
+    ],
+    "category_videos": [
+      "https://gayfappy.com/index.php/category/videos/"
+    ],
+    "tag": [
+      "https://gayfappy.com/index.php/tag/{slug}/"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "h1.entry-title text on the post page; also available in the HTML <title>",
+    "date": "absolute post date in the entry meta/byline block, formatted like 'May 9, 2026'",
+    "description": "main WordPress post content inside the entry-content/article body",
+    "cover_image": "prefer og:image meta; fallback to first post image or embedded video thumbnail if present",
+    "performers": "infer from tag links on the post page; the site does not have dedicated performer pages",
+    "tags": "tag links on the post page, usually under /index.php/tag/{slug}/",
+    "studio": "Gay Fappy (constant site/studio value, since posts are aggregator-style blog entries)",
+    "site_name": "Gay Fappy"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_container": [
+      "article.post",
+      "main article"
+    ],
+    "scene_title": [
+      "h1.entry-title",
+      "title"
+    ],
+    "date": [
+      ".entry-meta time",
+      ".entry-meta",
+      "text near author/byline containing a full calendar date"
+    ],
+    "description": [
+      ".entry-content",
+      "article .entry-content p",
+      "strip boilerplate like 'More' links and unrelated navigation text"
+    ],
+    "cover_image": [
+      "meta[property='og:image']",
+      "meta[name='og:image']",
+      ".entry-content img:first-of-type",
+      "video poster attribute if present"
+    ],
+    "performers": [
+      "a[href*='/index.php/tag/']",
+      "tag inference should be conservative because tags mix performers and topical labels"
+    ],
+    "tags": [
+      ".tags-links a",
+      "a[rel='tag']",
+      "a[href*='/index.php/tag/']"
+    ],
+    "search_results": [
+      "article.post in search results",
+      "h2.entry-title a",
+      "a[href*='/index.php/'] with title text from result cards"
+    ],
+    "studio": [
+      "Hardcode 'Gay Fappy'"
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "url": "https://gayfappy.com/?s={query}",
+    "notes": "Use WordPress site search. Parse returned post cards/articles, then filter for likely scene posts. Prefer URLs matching /index.php/{id}/{slug}/ and optionally bias toward posts in the Videos category when category labels are available."
+  },
+  "fragment_matching_strategy": {
+    "supported": true,
+    "notes": "Use the filename fragment or title fragment as the search query against the WordPress search endpoint. Rank search results with normalized string similarity before scraping the top candidate."
+  },
+  "performer_page_fields": {
+    "supported": false,
+    "notes": "No dedicated performer pages were identified. Tags appear to be the only performer-like entity pages, so performerByURL is not recommended for the first implementation."
+  },
+  "anti_bot_or_access_notes": [
+    "No Cloudflare or captcha challenge was observed during inspection",
+    "Use a browser-like User-Agent header on requests",
+    "WordPress pages appear server-rendered and should parse cleanly with requests + BeautifulSoup"
+  ],
+  "known_limitations": [
+    "The site mixes photos, gifs, and videos; search results may include non-video posts unless filtered carefully",
+    "Performer names are not strongly normalized and are mixed with topical tags",
+    "No dedicated performer pages were identified, so performer scraping is weak or not applicable",
+    "Cover image may require fallback logic when og:image is missing or low quality",
+    "Aggregator-style posts may not expose a true source studio beyond the site name"
+  ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://gayfappy.com/index.php/58774/outdoor-session-with-vadim-romeo-davis/",
+      "https://gayfappy.com/index.php/58733/marin-barbarosie-bottoms-for-bastian-karim/"
+    ],
+    "search_queries": [
+      "https://gayfappy.com/?s=bastian+karim",
+      "https://gayfappy.com/?s=vadim+romeo+davis"
+    ],
+    "fragments": [
+      "bastian karim",
+      "vadim romeo davis"
+    ]
+  },
+  "implementation_notes": {
+    "script_language": "python",
+    "libraries": [
+      "requests",
+      "beautifulsoup4"
+    ],
+    "recommended_script_name": "GayFappy.py",
+    "recommended_yaml_name": "GayFappy.yml"
+  },
+  "sources": [
+    "https://gayfappy.com/",
+    "https://gayfappy.com/index.php/category/videos/",
+    "https://gayfappy.com/index.php/58774/outdoor-session-with-vadim-romeo-davis/",
+    "https://gayfappy.com/index.php/58733/marin-barbarosie-bottoms-for-bastian-karim/",
+    "https://gayfappy.com/?s=bastian+karim",
+    "https://docs.stashapp.cc/in-app-manual/scraping/scraperdevelopment/",
+    "https://docs.stashapp.cc/metadata-sources/scrapers/"
+  ]
+}
