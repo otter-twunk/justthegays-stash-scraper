@@ -1,5 +1,4 @@
 name: XHamster
-description: Stash scraper for xhamster.com
 
 sceneByURL:
   - action: script

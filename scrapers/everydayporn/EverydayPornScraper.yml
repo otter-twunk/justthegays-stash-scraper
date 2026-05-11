@@ -1,10 +1,17 @@
 name: EverydayPornScraper
-description: Stash scraper for https://www.everydayporn.co
-version: 1.0
-exec:
-  - python3
-  - "{scraperDir}/EverydayPornScraper.py"
-interface: rawJson
-hooks:
-  - name: sceneByURL
-  - name: sceneByName
+
+sceneByURL:
+  - action: script
+    url:
+      - everydayporn.co/video/
+    script:
+      - python3
+      - EverydayPornScraper.py
+      - sceneByURL
+
+sceneByName:
+  action: script
+  script:
+    - python3
+    - EverydayPornScraper.py
+    - sceneByName

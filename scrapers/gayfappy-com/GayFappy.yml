@@ -1,5 +1,4 @@
 name: GayFappy
-description: Stash scraper for gayfappy.com
 
 sceneByURL:
   - action: script

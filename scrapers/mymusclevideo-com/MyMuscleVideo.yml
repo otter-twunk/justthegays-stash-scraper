@@ -13,8 +13,8 @@ sceneByURL:
       - sceneByURL
 
 sceneByName:
-  - action: script
-    script:
-      - python
-      - MyMuscleVideo.py
-      - sceneByName
+  action: script
+  script:
+    - python
+    - MyMuscleVideo.py
+    - sceneByName

@@ -46,7 +46,7 @@ Use this before publishing a new scraper to the repo.
 - Run `python3 scripts/validate_scraper_repo.py`.
 - Run `python3 scripts/export_stash_sync.py` to rebuild `build/stash-sync/`.
 - Verify `build/stash-sync/manifest.json` includes the expected scraper files.
-- Copy the exported files from `build/stash-sync/` into your Stash `scrapers` directory.
+- Copy the exported `.yml` and `.py` files from `build/stash-sync/` into your Stash `scrapers` directory.
 - Commit with a short site-specific message.
 - Push to `main`.
 - Verify the repo renders the new files correctly on GitHub.

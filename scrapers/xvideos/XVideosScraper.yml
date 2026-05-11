@@ -1,5 +1,4 @@
 name: XVideosScraper
-description: Stash scraper for https://www.xvideos.com
 
 sceneByURL:
   - action: script

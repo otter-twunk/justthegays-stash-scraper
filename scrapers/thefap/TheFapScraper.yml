@@ -1,10 +1,19 @@
 name: TheFapScraper
-description: Stash scraper for https://thefap.net
-version: 1.0
-exec:
-  - python3
-  - "{scraperDir}/TheFapScraper.py"
-interface: rawJson
-hooks:
-  - name: sceneByURL
-  - name: performerByURL
+
+sceneByURL:
+  - action: script
+    url:
+      - thefap.net/
+    script:
+      - python3
+      - TheFapScraper.py
+      - sceneByURL
+
+performerByURL:
+  - action: script
+    url:
+      - thefap.net/
+    script:
+      - python3
+      - TheFapScraper.py
+      - performerByURL

@@ -55,19 +55,23 @@ def export_scrapers() -> list[dict[str, str]]:
     for scraper_dir in sorted(path for path in SCRAPERS_DIR.iterdir() if path.is_dir()):
         yml_file = primary_file(scraper_dir, ".yml")
         py_file = primary_file(scraper_dir, ".py")
+        target_yml = EXPORT_DIR / yml_file.name
+        target_py = EXPORT_DIR / py_file.name
 
-        target_dir = EXPORT_DIR / scraper_dir.name
-        target_dir.mkdir(parents=True, exist_ok=True)
+        if target_yml.exists():
+            raise RuntimeError(f"Duplicate export filename detected: {target_yml.name}")
+        if target_py.exists():
+            raise RuntimeError(f"Duplicate export filename detected: {target_py.name}")
 
-        shutil.copy2(yml_file, target_dir / yml_file.name)
-        shutil.copy2(py_file, target_dir / py_file.name)
+        shutil.copy2(yml_file, target_yml)
+        shutil.copy2(py_file, target_py)
 
         manifest_rows.append(
             {
                 "site": scraper_dir.name,
                 "source_dir": str(scraper_dir.relative_to(ROOT)),
-                "yml_file": str((target_dir / yml_file.name).relative_to(ROOT)),
-                "py_file": str((target_dir / py_file.name).relative_to(ROOT)),
+                "yml_file": str(target_yml.relative_to(ROOT)),
+                "py_file": str(target_py.relative_to(ROOT)),
             }
         )
 
