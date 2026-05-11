@@ -1,0 +1,40 @@
+name: GayForFans
+
+sceneByURL:
+  - action: script
+    url:
+      - gayforfans.com/video/
+    script:
+      - python
+      - GayForFans.py
+      - sceneByURL
+
+sceneByName:
+  action: script
+  script:
+    - python
+    - GayForFans.py
+    - sceneByName
+
+sceneByQueryFragment:
+  action: script
+  script:
+    - python
+    - GayForFans.py
+    - sceneByQueryFragment
+
+sceneByFragment:
+  action: script
+  script:
+    - python
+    - GayForFans.py
+    - sceneByFragment
+
+performerByURL:
+  - action: script
+    url:
+      - gayforfans.com/performer/
+    script:
+      - python
+      - GayForFans.py
+      - performerByURL

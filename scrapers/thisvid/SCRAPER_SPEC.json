@@ -14,22 +14,24 @@
     "search": []
   },
   "metadata_mapping": {
-    "scene_title": "og:title or page <title>",
-    "date": "Likely page metadata or structured data — requires live scene parse to confirm",
-    "description": "og:description",
+    "scene_title": "og:title with trailing ' - ThisVid.com' removed, or page <title>",
+    "date": "Public scene page 'Added:' text if present and parseable; otherwise omitted",
+    "description": "Scene description block <ul class='description'> first <p>, else og:description",
     "cover_image": "og:image",
-    "performers": "Member/uploader links if present on scene page",
-    "tags": "Category or tag links on scene page",
-    "studio": "Not confirmed; site is community-upload focused"
+    "performers": "Not populated from public pages because uploader/member links are not reliable performer metadata",
+    "tags": "Categories plus tag links from the scene description block",
+    "studio": "Not populated; site is community-upload focused",
+    "code": "Hidden scene video ID from data-video-id or pageContext.videoId"
   },
   "selectors_or_parsing_notes": {
-    "scene_title": ["og:title", "h1"],
-    "date": ["structured data or page text — TBC during implementation"],
-    "description": ["og:description"],
+    "scene_title": ["meta[property='og:title']", "title"],
+    "date": ["<span>Added:</span> ... if present"],
+    "description": ["ul.description li p", "meta[property='og:description']", "meta[name='description']"],
     "cover_image": ["og:image"],
-    "performers": ["a[href*='/members/']"],
-    "tags": ["a[href*='/categories/']"],
-    "studio": []
+    "performers": ["Not scraped from uploader/member links"],
+    "tags": ["<li><span>Categories:</span>...</li>", "<li><span>Tags:</span>...</li>"],
+    "studio": [],
+    "code": ["div.video-id[data-video-id]", "pageContext.videoId"]
   },
   "search_strategy": {
     "supported": false,
@@ -46,10 +48,10 @@
     "Use browser-grade headers and introduce request delays."
   ],
   "known_limitations": [
-    "Scene URL structure uses slugs, not numeric IDs — listing-first discovery required.",
-    "Performer/member pages not confirmed during research.",
-    "Search support unconfirmed.",
-    "Full metadata availability requires live scene page fetch during implementation."
+    "Scene URL structure uses slugs, not numeric IDs — listing-first discovery is still useful.",
+    "Public pages expose uploader/member links more clearly than performer/model metadata, so performers are intentionally left blank.",
+    "Search support is not implemented.",
+    "Publish date is omitted when the anonymous scene HTML does not include a parseable Added date."
   ],
   "validation_examples": {
     "scene_urls": ["https://thisvid.com/videos/blonde-anal-fun/"],

@@ -2,27 +2,27 @@
 
 ## Must Do (Codex)
 
-- [ ] Implement `scrape_scene()` in `GayFappy.py`
-  - [ ] Parse title from `h1.entry-title` or page title fallback
-  - [ ] Parse absolute date from `.entry-meta time` or byline text
-  - [ ] Parse readable details from `.entry-content`
-  - [ ] Parse `og:image` with fallback to first post image or poster
-  - [ ] Parse tags from WordPress tag links
-  - [ ] Infer performers conservatively from tag labels
-  - [ ] Hardcode studio as `"Gay Fappy"`
-- [ ] Implement `search_scenes()` in `GayFappy.py`
-  - [ ] Query `/?s={query}`
-  - [ ] Parse search result cards/articles
-  - [ ] Keep likely scene URLs only
-  - [ ] Rank results by title similarity
-- [ ] Wire `sceneByFragment` to search and best-match resolution
-- [ ] Write `README.md`
-- [ ] Run against validation examples in `SCRAPER_SPEC.json`
-- [ ] Check against `workflow/NEW_SCRAPER_CHECKLIST.md`
+- [x] Implement `scrape_scene()` in `GayFappy.py`
+  - [x] Parse title from `h1.entry-title` or page title fallback
+  - [x] Parse absolute date from `time.post-date` or page text fallback
+  - [x] Parse readable details from `.entry-content`
+  - [x] Parse `og:image` with fallback to post images
+  - [x] Parse tags from WordPress tag links
+  - [x] Infer performers conservatively from tag labels
+  - [x] Hardcode studio as `"Gay Fappy"`
+- [x] Implement `search_scenes()` in `GayFappy.py`
+  - [x] Query `/?s={query}`
+  - [x] Parse search result cards/articles
+  - [x] Keep likely scene URLs only
+  - [x] Rank results by title similarity and bias video posts
+- [x] Wire `sceneByFragment` to search and best-match resolution
+- [x] Write `README.md`
+- [x] Run against validation examples in `SCRAPER_SPEC.json`
+- [x] Check against `workflow/NEW_SCRAPER_CHECKLIST.md`
 
 ## Nice to Have
 
-- [ ] Category-aware filtering to prefer `videos` posts over photos/gifs in search results
+- [x] Category-aware filtering to prefer `videos` posts over photos/gifs in search results
 - [ ] Better heuristics for separating performer tags from generic tags
 - [ ] Retry logic for transient network issues
 - [ ] Debug logging to stderr

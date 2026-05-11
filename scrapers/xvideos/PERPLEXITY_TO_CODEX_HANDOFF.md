@@ -26,38 +26,41 @@ Use this file as the site-specific Codex handoff.
 ## Site Notes
 
 - Platform: Custom/proprietary (XVideos in-house platform)
-- Site is an adult content source — keep scraping metadata-only and respect rate limits
-- Perplexity live-inspected this site in May 2026; URL patterns and selectors below are verified
+- Site is an adult content source; keep scraping metadata-only and respect rate limits
+- Live validation on 2026-05-11 confirmed public scene, search, and profile pages are accessible with normal browser headers
 
 ## Metadata Mapping
 
-- **scene_title**: window.xv.conf.dyn.video_title OR html5player.setVideoTitle(...) OR JSON-LD VideoObject.name
-- **date**: JSON-LD VideoObject.uploadDate
-- **description**: JSON-LD VideoObject.description OR og:description
-- **cover_image**: JSON-LD VideoObject.thumbnailUrl[0] OR html5player.setThumbUrl169(...)
-- **performers**: window.xv.conf.dyn.video_models (may be empty); uploader link at /profiles/<name>
-- **tags**: window.xv.conf.dyn.video_tags (array)
-- **studio**: html5player.setSponsors(...) — usually false for amateur content
+- **scene_title**: `window.xv.conf.dyn.video_title` OR `html5player.setVideoTitle(...)` OR JSON-LD `VideoObject.name`
+- **date**: JSON-LD `VideoObject.uploadDate`
+- **description**: JSON-LD `VideoObject.description` OR `meta[name="description"]`
+- **cover_image**: JSON-LD `VideoObject.thumbnailUrl[0]` OR `html5player.setThumbUrl169(...)` OR `og:image`
+- **performers**: primary uploader/profile link in the scene metadata block at `/profiles/<name>`; `window.xv.conf.dyn.video_models` may still be empty
+- **tags**: `window.xv.conf.dyn.video_tags` OR `/tags/` links
+- **studio**: `html5player.setSponsors(...)` when present; commonly `false`
+- **performer profile**: `window.xv.conf.data.user` plus `pinfo-*` fields in the profile HTML
 
 ## Anti-Bot / Access Notes
 
-- No Cloudflare detected on public pages.
-- Standard browser-grade headers (User-Agent, Accept-Language) are sufficient.
-- Add conservative request delays between pagination calls.
+- No Cloudflare detected on the validated public pages.
+- Standard browser-grade headers (`User-Agent`, `Accept-Language`) were sufficient.
+- The scraper can stay dependency-light and use direct HTTP requests.
 
 ## Known Limitations
 
-- video_models array is frequently empty on amateur/upload pages.
-- Performer pages use /profiles/ not a dedicated pornstar path for user-uploaded content.
+- `video_models` is frequently empty on amateur or uploader-driven pages.
+- Performer pages use `/profiles/` rather than a dedicated studio or pornstar route.
 - Signed CDN media URLs expire; do not store raw stream URLs.
-- Content URLs include signed tokens and should not be followed for download.
+- Search results provide listing metadata only; full scene details should come from `sceneByURL`.
 
 ## Validation
 
-Test against these live scene URLs:
-- `https://www.xvideos.com/video57885821/mi_gran_polla`
+Validated examples on 2026-05-11:
 
-- Test `sceneByURL` against a live scene page
-- Test `performerByURL` if performer pages exist
-- Test `sceneByName` if site search is usable
-- Test fragment matching if practical
+- Scene URL: `https://www.xvideos.com/video57885821/mi_gran_polla`
+- Performer URL: `https://www.xvideos.com/profiles/negro-guebo`
+- Search query: `gay`
+
+Observed URL behavior:
+
+- Canonical scene URLs currently appear as `https://www.xvideos.com/video.<id_or_hash>/<slug>` on page metadata and search listings, although some older `video<id>/<slug>` links still resolve.

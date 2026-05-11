@@ -24,12 +24,14 @@ Platform: Custom/proprietary (XVideos in-house platform)
 
 Notes:
 
-- Scraper implementation pending — this folder contains Perplexity research handoff files for Codex.
-- Adult content source: keep scraping metadata-only.
+- Metadata-only scraper for live XVideos scene pages, search results, and profile pages.
+- Uses embedded `window.xv.conf`, JSON-LD, and stable HTML fallbacks.
+- No external Python dependencies are required. If `certifi` is installed it will be used automatically.
 
 Known limitations:
 
-- video_models array is frequently empty on amateur/upload pages.
-- Performer pages use /profiles/ not a dedicated pornstar path for user-uploaded content.
-- Signed CDN media URLs expire; do not store raw stream URLs.
-- Content URLs include signed tokens and should not be followed for download.
+- `video_models` is frequently empty on amateur or uploader-driven pages.
+- Performer pages use `/profiles/` rather than a dedicated studio or pornstar route.
+- Signed CDN media URLs expire; do not store or reuse stream URLs.
+- Search results return listing metadata only; full details come from `sceneByURL`.
+- Scene performer extraction is usually limited to the main uploader/profile link shown on the page.

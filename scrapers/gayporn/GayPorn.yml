@@ -1,0 +1,40 @@
+name: GayPorn
+
+sceneByURL:
+  - action: script
+    url:
+      - gayporn.com/video/
+    script:
+      - python
+      - GayPorn.py
+      - sceneByURL
+
+sceneByName:
+  action: script
+  script:
+    - python
+    - GayPorn.py
+    - sceneByName
+
+sceneByQueryFragment:
+  action: script
+  script:
+    - python
+    - GayPorn.py
+    - sceneByQueryFragment
+
+sceneByFragment:
+  action: script
+  script:
+    - python
+    - GayPorn.py
+    - sceneByFragment
+
+performerByURL:
+  - action: script
+    url:
+      - gayporn.com/pornstars/
+    script:
+      - python
+      - GayPorn.py
+      - performerByURL

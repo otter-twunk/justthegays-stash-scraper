@@ -1,0 +1,120 @@
+{
+  "site_name": "GayForFans",
+  "site_url": "https://gayforfans.com/",
+  "folder_name": "gayforfans",
+  "platform": "WordPress with server-rendered search, scene, and performer pages",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://gayforfans.com/video/{slug}/"
+    ],
+    "performer": [
+      "https://gayforfans.com/performer/{slug}/"
+    ],
+    "search": [
+      "https://gayforfans.com/?s={query}",
+      "https://gayforfans.com/search/{query}"
+    ],
+    "category": [
+      "https://gayforfans.com/categories/{slug}/"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "Scene page VideoObject JSON-LD `name`; fallback to HTML title",
+    "date": "Scene page VideoObject JSON-LD `uploadDate`, converted to YYYY-MM-DD",
+    "description": "Scene page VideoObject JSON-LD `description`; fallback to meta description",
+    "cover_image": "Scene page VideoObject JSON-LD `thumbnailUrl`",
+    "performers": "Scene page VideoObject JSON-LD `actor[]`; fallback to `/performer/` links",
+    "tags": "Scene page VideoObject JSON-LD `keywords`; fallback to `/categories/` links",
+    "studio": "Constant `GayForFans`",
+    "performer_name": "Performer page Person JSON-LD `name`; fallback to H1/title",
+    "performer_image": "Performer page Person JSON-LD `image`; fallback to first scene thumbnail",
+    "performer_details": "Performer page Person JSON-LD `description`; fallback to meta description"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_json_ld": [
+      "Find `<script type=\"application/ld+json\">` blocks and parse the `VideoObject` payload"
+    ],
+    "scene_title": [
+      "VideoObject `name`",
+      "`<title>` without the ` - Watch gay porn for free on GayForFans.com` suffix"
+    ],
+    "date": [
+      "VideoObject `uploadDate`"
+    ],
+    "description": [
+      "VideoObject `description` is templated site copy and may need light cleanup"
+    ],
+    "cover_image": [
+      "VideoObject `thumbnailUrl`"
+    ],
+    "performers": [
+      "VideoObject `actor` list of Person objects",
+      "Fallback: `/performer/` anchors on the scene page"
+    ],
+    "tags": [
+      "VideoObject `keywords` comma-separated values",
+      "Fallback: `/categories/` anchors with `rel=\"tag\"`",
+      "Drop the generic `Video` keyword/category"
+    ],
+    "search_results": [
+      "Search result cards are `<article>` nodes whose class list includes `video`",
+      "Card title lives in `h3.post-title a` and URL lives on linked thumbnail/title anchors"
+    ],
+    "performer_json_ld": [
+      "Performer pages include a Person JSON-LD block with `name`, `description`, `url`, and `image`"
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "notes": "Use the `/?s={query}` WordPress-style search endpoint. Parse video result cards, dedupe by URL, then rank exact normalized title matches above fuzzy matches."
+  },
+  "fragment_matching_strategy": {
+    "supported": true,
+    "notes": "Derive a query from title/name/filename/path, normalize it by removing extensions, codec/resolution noise, and long numeric suffixes, then search and scrape the top sufficiently similar match."
+  },
+  "anti_bot_or_access_notes": [
+    "No Cloudflare or captcha challenge was observed during live testing on May 11, 2026.",
+    "A browser-like User-Agent and normal HTML request headers were sufficient.",
+    "Scene and performer metadata are available without JavaScript execution because the useful JSON-LD is server-rendered."
+  ],
+  "known_limitations": [
+    "Scene descriptions are templated marketing blurbs rather than rich editorial synopses.",
+    "The site search endpoint can return many near-duplicate scenes for popular performer names.",
+    "Fragment matching depends on title similarity and may skip weak matches below the confidence threshold.",
+    "Performer pages do not expose rich structured biographical metadata beyond name, image, and description."
+  ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://gayforfans.com/video/nick-floyd-nickfloyd-and-sean-ford-theonlyseanford-flip-fuck/",
+      "https://gayforfans.com/video/7-man-bukkake-with-sam-holister-aussie_sam/"
+    ],
+    "performer_urls": [
+      "https://gayforfans.com/performer/nick-floyd-nickfloyd/",
+      "https://gayforfans.com/performer/nick-sandell/"
+    ],
+    "search_queries": [
+      "nick floyd",
+      "sam holister"
+    ],
+    "fragments": [
+      "nick_floyd_and_sean_ford_flip_fuck.mp4",
+      "7 man bukkake with sam holister"
+    ]
+  },
+  "sources": [
+    "https://gayforfans.com/",
+    "https://gayforfans.com/video/nick-floyd-nickfloyd-and-sean-ford-theonlyseanford-flip-fuck/",
+    "https://gayforfans.com/video/7-man-bukkake-with-sam-holister-aussie_sam/",
+    "https://gayforfans.com/performer/nick-floyd-nickfloyd/",
+    "https://gayforfans.com/performer/nick-sandell/",
+    "https://gayforfans.com/?s=nick+floyd",
+    "https://docs.stashapp.cc/in-app-manual/scraping/scraperdevelopment/"
+  ]
+}

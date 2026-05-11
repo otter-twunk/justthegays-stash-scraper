@@ -27,5 +27,7 @@ Also:
 - Start from the site template files in this folder
 - Use `SCRAPER_SPEC.json` as the primary structured input
 - Use `PERPLEXITY_TO_CODEX_HANDOFF.md` as the research and implementation guide
+- Account for the site's current Cloudflare-managed challenge in non-browser clients
+- Prefer the live `/search/?q=...` endpoint for `sceneByName`
 - Update the root `README.md` with this scraper folder
 - Validate the result with `workflow/NEW_SCRAPER_CHECKLIST.md`

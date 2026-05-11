@@ -10,6 +10,7 @@
   ],
   "url_patterns": {
     "scene": [
+      "https://www.xvideos.com/video.<id_or_hash>/<slug>",
       "https://www.xvideos.com/video<id>/<slug>"
     ],
     "performer": [
@@ -23,10 +24,10 @@
     "scene_title": "window.xv.conf.dyn.video_title OR html5player.setVideoTitle(...) OR JSON-LD VideoObject.name",
     "date": "JSON-LD VideoObject.uploadDate",
     "description": "JSON-LD VideoObject.description OR og:description",
-    "cover_image": "JSON-LD VideoObject.thumbnailUrl[0] OR html5player.setThumbUrl169(...)",
-    "performers": "window.xv.conf.dyn.video_models (may be empty); uploader link at /profiles/<name>",
-    "tags": "window.xv.conf.dyn.video_tags (array)",
-    "studio": "html5player.setSponsors(...) \u2014 usually false for amateur content"
+    "cover_image": "JSON-LD VideoObject.thumbnailUrl[0] OR html5player.setThumbUrl169(...) OR og:image",
+    "performers": "primary uploader/profile link in page metadata; window.xv.conf.dyn.video_models may be empty",
+    "tags": "window.xv.conf.dyn.video_tags (array) OR /tags/ links",
+    "studio": "html5player.setSponsors(...) - usually false for amateur content"
   },
   "selectors_or_parsing_notes": {
     "scene_title": [
@@ -36,46 +37,51 @@
       "og:title"
     ],
     "date": [
-      "JSON-LD uploadDate",
-      "og: (not present \u2014 use JSON-LD)"
+      "JSON-LD uploadDate"
     ],
     "description": [
       "JSON-LD description",
-      "og:description"
+      "meta[name='description']"
     ],
     "cover_image": [
       "JSON-LD thumbnailUrl[0]",
-      "html5player.setThumbUrl169()"
+      "html5player.setThumbUrl169()",
+      "og:image"
     ],
     "performers": [
+      "li.main-uploader a[href^='/profiles/']",
       "window.xv.conf.dyn.video_models",
-      "a[href^='/profiles/']"
+      "search listing profile links"
     ],
     "tags": [
-      "window.xv.conf.dyn.video_tags"
+      "window.xv.conf.dyn.video_tags",
+      "a[href^='/tags/']"
     ],
-    "studio": [
-      "html5player.setSponsors()"
+    "profile": [
+      "window.xv.conf.data.user",
+      "pinfo-age",
+      "pinfo-country",
+      "pinfo-region"
     ]
   },
   "search_strategy": {
     "supported": true,
-    "notes": "GET https://www.xvideos.com/?k=<query> returns paginated HTML listing."
+    "notes": "GET https://www.xvideos.com/?k=<query> returns paginated HTML listings with scene URL, title, thumbnail, and uploader profile link."
   },
   "fragment_matching_strategy": {
     "supported": false,
     "notes": "No filename-match endpoint confirmed."
   },
   "anti_bot_or_access_notes": [
-    "No Cloudflare detected on public pages.",
-    "Standard browser-grade headers (User-Agent, Accept-Language) are sufficient.",
-    "Add conservative request delays between pagination calls."
+    "No Cloudflare detected on public pages during validation.",
+    "Standard browser-grade headers (User-Agent, Accept-Language) were sufficient.",
+    "Keep requests conservative if extending search pagination."
   ],
   "known_limitations": [
-    "video_models array is frequently empty on amateur/upload pages.",
-    "Performer pages use /profiles/ not a dedicated pornstar path for user-uploaded content.",
+    "video_models is frequently empty on amateur or uploader-driven pages.",
+    "Performer pages use /profiles/ not a dedicated pornstar route for uploader content.",
     "Signed CDN media URLs expire; do not store raw stream URLs.",
-    "Content URLs include signed tokens and should not be followed for download."
+    "Search results return listing metadata only and require scene scraping for full details."
   ],
   "validation_examples": {
     "scene_urls": [
@@ -85,12 +91,12 @@
       "https://www.xvideos.com/profiles/negro-guebo"
     ],
     "search_queries": [
-      "https://www.xvideos.com/?k=gay"
+      "gay"
     ],
     "fragments": []
   },
   "sources": [
     "https://www.xvideos.com",
-    "Perplexity live site inspection May 2026"
+    "Live site inspection on 2026-05-11"
   ]
 }

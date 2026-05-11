@@ -21,10 +21,10 @@
   "metadata_mapping": {
     "scene_title": "<title> (strip trailing ' - GayHardFuck.com') or og:title meta tag",
     "date": "relative date string near duration/views block (e.g. '3 years ago') — requires conversion to approximate ISO date",
-    "description": "og:description meta tag or inline paragraph near video player",
+    "description": "og:description meta tag or inline description block near video player",
     "cover_image": "og:image meta tag",
-    "performers": "links to /models/ slugs on scene page (if present)",
-    "tags": "links to /tags/ slugs on scene page",
+    "performers": "links to /models/ slugs on scene page (if present); otherwise parse 'Models ...' or parenthesized names from structured description text",
+    "tags": "links to /tags/ slugs on scene page (if present); otherwise parse comma-delimited keyword text from structured description",
     "studio": "GayHardFuck (constant — tube aggregator, no per-scene studio field)"
   },
   "selectors_or_parsing_notes": {
@@ -45,10 +45,12 @@
     ],
     "performers": [
       "a[href*='/models/'] — collect href slugs and display text from scene page",
+      "Fallback: parse 'Models Name, Name' or '(Name, Name)' from the description when no model links are present",
       "Note: /models/ index appears empty; performer links may be sparse or absent on many scenes"
     ],
     "tags": [
-      "a[href*='/tags/'] — collect tag label text from scene page"
+      "a[href*='/tags/'] — collect tag label text from scene page",
+      "Fallback: split structured comma-delimited keyword descriptions before the ///// separator"
     ],
     "studio": [
       "Hardcode 'GayHardFuck' as studio constant"
@@ -78,7 +80,8 @@
     "No per-scene studio field — site is a tube aggregator; hardcode constant",
     "No structured JSON-LD or API detected",
     "Tags may be sparse or absent on some scene pages",
-    "Search result quality depends on title match — may return false positives for fragment matching"
+    "Site search quality varies by query and may omit exact titles",
+    "sceneByFragment should prefer returning no match over a weak false positive"
   ],
   "validation_examples": {
     "scene_urls": [

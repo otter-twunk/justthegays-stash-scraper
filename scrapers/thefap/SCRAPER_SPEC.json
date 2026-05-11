@@ -4,12 +4,12 @@
   "folder_name": "thefap",
   "platform": "Custom social/content platform (not KVS)",
   "supported_hooks": [
-    "sceneByURL"
+    "sceneByURL",
+    "performerByURL"
   ],
   "url_patterns": {
     "scene": [
-      "https://thefap.net/videos/",
-      "https://thefap.net/<username>-<id>/"
+      "https://thefap.net/<username>-<id>/<source>/i<number>"
     ],
     "performer": [
       "https://thefap.net/<username>-<id>/"
@@ -19,21 +19,21 @@
     ]
   },
   "metadata_mapping": {
-    "scene_title": "og:title or page <title>",
-    "date": "Not confirmed — requires live scene/post page parse",
-    "description": "og:description",
-    "cover_image": "og:image",
-    "performers": "Profile links at /<username>-<id>/ or /feed/<name-id>",
-    "tags": "Group or category links at /g/<slug>",
+    "scene_title": "Scene header text when present, else page <title>",
+    "date": "Not publicly exposed on tested public pages",
+    "description": "Synthesized from source slug and cleaned page title when no useful site description is exposed",
+    "cover_image": "Embedded player iframe query parameter `i`, or tile thumbnail fallback",
+    "performers": "Primary profile link at /<username>-<id>/ plus URL slug fallback",
+    "tags": "Group links at /g/<slug> when present; source slug fallback",
     "studio": "Not applicable — community/social platform"
   },
   "selectors_or_parsing_notes": {
-    "scene_title": ["og:title", "h1"],
-    "date": ["structured data or page text — TBC during implementation"],
-    "description": ["og:description"],
-    "cover_image": ["og:image"],
-    "performers": ["a[href*='thefap.net/'][href$='/']"],
-    "tags": ["a[href*='/g/']"],
+    "scene_title": ["profile-link text + adjacent `Video #...` span", "page <title>"],
+    "date": ["No stable public selector found on tested scene pages"],
+    "description": ["derived from source slug and page <title>"],
+    "cover_image": ["iframe#sv-iframe src query param `i`", "thumbnail data-src fallback"],
+    "performers": ["a[href^='/<username>-<id>/'] on scene page", "URL slug fallback"],
+    "tags": ["a[href*='/g/']", "URL source slug fallback"],
     "studio": []
   },
   "search_strategy": {
@@ -51,14 +51,14 @@
     "Treat as a community site — respect rate limits and session handling."
   ],
   "known_limitations": [
-    "Not a standard KVS or WordPress install — custom parsing required throughout.",
-    "Some content may require login.",
-    "Post/video/profile entity distinction needs clarification during implementation.",
-    "Full metadata availability requires live page fetches."
+    "Not a standard KVS or WordPress install — custom parsing is required throughout.",
+    "Public scene pages tested in May 2026 do not expose a reliable publish date.",
+    "Some content may require login or may intermittently trigger Cloudflare/rate limiting.",
+    "Performer profile images appear to be gallery thumbnails rather than dedicated avatar media."
   ],
   "validation_examples": {
-    "scene_urls": ["https://thefap.net/videos/"],
-    "performer_urls": ["https://thefap.net/explore/"],
+    "scene_urls": ["https://thefap.net/sortadandy-1405406/coomer/i4"],
+    "performer_urls": ["https://thefap.net/sortadandy-1405406/"],
     "search_queries": [],
     "fragments": []
   },

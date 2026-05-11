@@ -2,30 +2,30 @@
 
 ## Implementation
 
-- [ ] Create `BoyFriendTV.py` based on justthegays-tv pattern
-- [ ] Create `BoyFriendTV.yml` with sceneByURL and performerByURL hooks
-- [ ] Implement `sceneByURL` — fetch scene page, parse JSON-LD VideoObject
-- [ ] Implement `performerByURL` — attempt fetch, return name-from-slug + gender fallback on CF block
-- [ ] Set `age_verified=1` cookie in all requests
-- [ ] Handle missing metadata fields gracefully
+- [x] Create `BoyFriendTV.py` based on justthegays-tv pattern
+- [x] Create `BoyFriendTV.yml` with sceneByURL and performerByURL hooks
+- [x] Implement `sceneByURL` — fetch scene page, parse JSON-LD VideoObject
+- [x] Implement `performerByURL` — attempt fetch, return name-from-slug + gender fallback on CF block
+- [x] Set `age_verified=1` cookie in all requests
+- [x] Handle missing metadata fields gracefully
 
 ## Validation
 
-- [ ] Test sceneByURL against `https://www.boyfriendtv.com/videos/1426460/selector/`
-  - [ ] title: "selector"
-  - [ ] date: "2025-06-07"
-  - [ ] performers: Scott Demarco, Brody Meyer, Simon Thies
-  - [ ] tags: Anal, Big Cock, Tattoo, Bareback, Facial, Cum In Mouth, Muscle, Hairy, etc.
-  - [ ] image URL populated
-  - [ ] studio: "BoyFriendTV"
-- [ ] Test performerByURL against `https://www.boyfriendtv.com/pornstars/scott-demarco-2077/`
-  - [ ] Document what is returned (full bio or partial due to Cloudflare)
+- [x] Test sceneByURL against `https://www.boyfriendtv.com/videos/1426460/selector/`
+  - [x] title: "selector"
+  - [x] date: "2025-06-07"
+  - [x] performers: Scott Demarco, Brody Meyer, Simon Thies
+  - [x] tags: Anal, Big Cock, Tattoo, Bareback, Facial, Cum In Mouth, Muscle, Hairy, etc.
+  - [x] image URL populated
+  - [x] studio: "BoyFriendTV"
+- [x] Test performerByURL against `https://www.boyfriendtv.com/pornstars/scott-demarco-2077/`
+  - [x] Live result currently returns partial data: `name` + `url` + `gender`
 
 ## Repo
 
-- [ ] Write `README.md` for this scraper folder
-- [ ] Update root `README.md` to add `scrapers/boyfriendtv-com` to current scrapers list
-- [ ] Run `scripts/validate_scraper_repo.py` if available
+- [x] Write `README.md` for this scraper folder
+- [x] Root `README.md` already includes `scrapers/boyfriendtv-com` in the current scrapers list
+- [x] Run `scripts/validate_scraper_repo.py` if available
 
 ## Known Blockers
 

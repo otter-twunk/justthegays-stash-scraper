@@ -5,16 +5,6 @@
 #   -- site is a Vue SPA (TXXX network); all routes return empty HTML shells with no metadata.
 #   -- performer and search pages have no server-rendered data.
 #
-# IMPLEMENTATION NOTE FOR CODEX:
-# This stub shows the intended structure. Before finalising, open a scene page in a
-# browser with DevTools > Network > XHR/Fetch to confirm the exact internal API endpoint
-# the Vue app calls to load video data. The expected pattern (per TXXX network) is:
-#
-#   GET https://www.thegay.com/api/json/video/{id}
-#   Headers: User-Agent (Firefox), Referer: <scene page URL>, Cookie: age_verified=1
-#
-# Replace API_ENDPOINT_PATH below with the confirmed path before shipping.
-
 import json
 import re
 import ssl
@@ -22,7 +12,7 @@ import subprocess
 import sys
 from datetime import datetime
 from html import unescape
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 BASE_URL = "https://www.thegay.com"
@@ -33,8 +23,8 @@ USER_AGENT = (
 )
 COOKIES = "age_verified=1"
 
-# TODO: confirm exact path via DevTools before shipping
-API_ENDPOINT_PATH = "/api/json/video/{id}"
+API_ENDPOINT_PATH = "/api/json/video/{lifetime}/{million_bucket}/{thousand_bucket}/{id}.json"
+API_LIFETIME = 86400
 
 SSL_CONTEXT = None
 try:
@@ -64,7 +54,7 @@ def fetch(url, extra_headers=None):
     try:
         with urlopen(req, timeout=30, context=SSL_CONTEXT) as response:
             return response.read().decode("utf-8", errors="replace")
-    except URLError:
+    except (HTTPError, URLError):
         curl_args = [
             "curl", "-L", "--silent", "--fail",
             "-A", USER_AGENT,
@@ -75,7 +65,10 @@ def fetch(url, extra_headers=None):
         for k, v in (extra_headers or {}).items():
             curl_args += ["-H", f"{k}: {v}"]
         curl_args.append(url)
-        result = subprocess.run(curl_args, capture_output=True, text=True, check=True)
+        try:
+            result = subprocess.run(curl_args, capture_output=True, text=True, check=True)
+        except subprocess.CalledProcessError:
+            return ""
         return result.stdout
 
 
@@ -97,9 +90,42 @@ def normalize(value):
     return re.sub(r"\s+", " ", unescape(str(value or ""))).strip()
 
 
+def unique_by_name(items):
+    seen = set()
+    unique = []
+    for item in items:
+        name = normalize(item.get("name", ""))
+        key = name.lower()
+        if not name or key in seen:
+            continue
+        seen.add(key)
+        unique.append({"name": name})
+    return unique
+
+
+def category_items(value):
+    if isinstance(value, dict):
+        return list(value.values())
+    if isinstance(value, list):
+        return value
+    return []
+
+
+def build_video_api_url(video_id):
+    numeric_id = int(video_id)
+    return BASE_URL + API_ENDPOINT_PATH.format(
+        lifetime=API_LIFETIME,
+        million_bucket=(numeric_id // 1_000_000) * 1_000_000,
+        thousand_bucket=(numeric_id // 1_000) * 1_000,
+        id=video_id,
+    )
+
+
 def fetch_video_api(video_id, scene_url):
-    api_url = BASE_URL + API_ENDPOINT_PATH.format(id=video_id)
+    api_url = build_video_api_url(video_id)
     raw = fetch(api_url, extra_headers={"Referer": scene_url})
+    if not raw:
+        return None
     try:
         return json.loads(raw)
     except json.JSONDecodeError:
@@ -120,6 +146,8 @@ def scrape_scene(url):
         data = data["video"]
     elif isinstance(data, dict) and "data" in data:
         data = data["data"]
+    elif not isinstance(data, dict):
+        return {}
 
     title = normalize(data.get("title") or data.get("name") or "")
 
@@ -129,27 +157,43 @@ def scrape_scene(url):
     details = normalize(data.get("description") or data.get("text") or "")
 
     # Cover image
-    image = ""
+    image = normalize(
+        data.get("thumbsrc")
+        or data.get("thumb")
+        or data.get("thumb_url")
+        or data.get("preview_url")
+        or ""
+    )
     thumbs = data.get("thumbs") or []
-    if thumbs and isinstance(thumbs, list):
+    if not image and thumbs and isinstance(thumbs, list):
         image = thumbs[0].get("src", "") if isinstance(thumbs[0], dict) else str(thumbs[0])
-    if not image:
-        image = data.get("thumb_url") or data.get("preview_url") or data.get("thumb") or ""
 
     # Performers
     performers = []
-    for model in data.get("models") or data.get("pornstars") or []:
+    performer_sources = []
+    for field in ("models", "pornstars", "models_suggested"):
+        performer_sources.extend(category_items(data.get(field)))
+    for model in performer_sources:
         name = ""
         if isinstance(model, dict):
-            name = normalize(model.get("title") or model.get("name") or "")
+            name = normalize(
+                model.get("title")
+                or model.get("name")
+                or model.get("username")
+                or ""
+            )
         elif isinstance(model, str):
             name = normalize(model)
         if name:
             performers.append({"name": name})
+    performers = unique_by_name(performers)
 
     # Tags
     tags = []
-    for cat in data.get("categories") or data.get("tags") or []:
+    tag_sources = []
+    for field in ("categories", "tags"):
+        tag_sources.extend(category_items(data.get(field)))
+    for cat in tag_sources:
         label = ""
         if isinstance(cat, dict):
             label = normalize(cat.get("title") or cat.get("name") or "")
@@ -157,6 +201,7 @@ def scrape_scene(url):
             label = normalize(cat)
         if label:
             tags.append({"name": label})
+    tags = unique_by_name(tags)
 
     scene = {
         "title": title,

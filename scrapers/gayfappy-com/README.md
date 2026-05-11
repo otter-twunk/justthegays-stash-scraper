@@ -1,37 +1,57 @@
-# Gay Fappy scraper
+# Gay Fappy Scraper
 
-This folder contains the research handoff and implementation stub for a Stash scraper targeting [Gay Fappy](https://gayfappy.com/).
+Stash Python scraper for [gayfappy.com](https://gayfappy.com/).
 
-## Status
+Files:
 
-Research and Codex handoff files are present.
+- `GayFappy.yml`
+- `GayFappy.py`
 
-Implementation of the Python scraper logic is still pending.
+Install:
 
-## Recommended hooks
+1. Copy both files into your Stash `scrapers` directory.
+2. Ensure the Python environment Stash uses has `requests` and `beautifulsoup4` installed.
+3. Reload scrapers in Stash or restart the app.
 
-- `sceneByURL`
-- `sceneByName`
-- `sceneByQueryFragment`
-- `sceneByFragment`
+## Supported Hooks
 
-## Not currently recommended
+| Hook | Description |
+|---|---|
+| `sceneByURL` | Scrape a scene from a `gayfappy.com/index.php/{id}/{slug}/` URL |
+| `sceneByName` | Search the site and return matching scenes |
+| `sceneByQueryFragment` | Search using a title/name/filename-derived fragment |
+| `sceneByFragment` | Resolve the best scene match from a fragment and scrape it |
 
-- `performerByURL`, because no dedicated performer page pattern was identified during research.
+## URL Patterns
 
-## Site characteristics
+- Scene: `https://gayfappy.com/index.php/{id}/{slug}/`
+- Search: `https://gayfappy.com/?s={query}`
 
-- WordPress-style site structure
-- Post URLs use `/index.php/{id}/{slug}/`
-- Search uses `/?s={query}`
-- Content mix includes videos, photos, and gifs, so search filtering matters
-- Metadata is available in server-rendered HTML and should be accessible with `requests` + `BeautifulSoup`
+## Metadata
+
+Extracts title, date, details, cover image, tags, and conservative performer guesses from tag labels.
+Studio is hardcoded as `Gay Fappy`.
+
+## Usage Notes
+
+- Search results are biased toward posts in the `Videos` category when mixed results are returned.
+- `sceneByFragment` only auto-resolves a result when the top title match is strong enough; otherwise it returns an empty object instead of guessing.
+- Performer inference is intentionally conservative and may leave `performers` empty when tags look ambiguous.
+
+## Known Limitations
+
+- Some posts expose only a title-like description, so `details` can be very short.
+- Search result cards often omit explicit heading elements; the scraper falls back to image alt text and excerpt text.
+- Tag labels mix performer names with generic categories, so some real performers may be missed.
+- The site appears to be an aggregator, so the scraper uses the site name as the studio instead of trying to infer an upstream source.
 
 ## Files
 
-- `SCRAPER_SPEC.json` — machine-friendly implementation spec
-- `PERPLEXITY_TO_CODEX_HANDOFF.md` — human-readable handoff for Codex
-- `CODEX_PROMPT.md` — minimal startup prompt
-- `TODO.md` — implementation checklist
-- `GayFappy.yml` — Stash scraper config stub
-- `GayFappy.py` — Python implementation stub
+| File | Purpose |
+|---|---|
+| `GayFappy.yml` | Stash scraper config |
+| `GayFappy.py` | Python scraper implementation |
+| `SCRAPER_SPEC.json` | Machine-readable implementation spec |
+| `PERPLEXITY_TO_CODEX_HANDOFF.md` | Human-readable research notes |
+| `CODEX_PROMPT.md` | Folder-local Codex startup prompt |
+| `TODO.md` | Implementation checklist |

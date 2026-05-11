@@ -100,11 +100,21 @@ def find_json_ld(blocks, wanted_type):
     for block in blocks:
         if block.get("@type") == wanted_type:
             return block
+        graph = block.get("@graph", [])
+        if isinstance(graph, list):
+            for item in graph:
+                if isinstance(item, dict) and item.get("@type") == wanted_type:
+                    return item
     return None
 
 
 def normalize_space(value):
     return re.sub(r"\s+", " ", value or "").strip()
+
+
+def strip_html(value):
+    text = re.sub(r"<[^>]+>", " ", value or "")
+    return normalize_space(unescape(text))
 
 
 def parse_date(iso_value):
@@ -129,6 +139,35 @@ def unique_names(values):
         seen.add(key)
         output.append({"name": name})
     return output
+
+
+def extract_meta_content(html, prop_name):
+    match = re.search(
+        rf'<meta[^>]+(?:property|name)=["\']{re.escape(prop_name)}["\'][^>]+content=["\']([^"\']+)',
+        html,
+        flags=re.IGNORECASE,
+    )
+    return normalize_space(unescape(match.group(1))) if match else ""
+
+
+def extract_html_title(html):
+    match = re.search(r"<title>(.*?)</title>", html, flags=re.IGNORECASE | re.DOTALL)
+    return strip_html(match.group(1)) if match else ""
+
+
+def clean_performer_name(value):
+    name = normalize_space(value)
+    name = re.sub(r"\s+Gay Pornstar\s+-\s+BoyFriendTV\.com$", "", name, flags=re.IGNORECASE)
+    name = re.sub(r"\s+\|\s+BoyFriendTV$", "", name, flags=re.IGNORECASE)
+    return normalize_space(name)
+
+
+def split_keywords(value):
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str):
+        return [part.strip() for part in value.split(",")]
+    return []
 
 
 def extract_performers_from_html(html):
@@ -173,7 +212,7 @@ def scrape_scene(url):
     performers = unique_names(actors) or extract_performers_from_html(html)
 
     # Tags from JSON-LD keywords list
-    kw = video.get("keywords", [])
+    kw = split_keywords(video.get("keywords", []))
     tags = unique_names(kw) if kw else extract_tags_from_html(html)
 
     # Cover image: prefer first full-size thumbnailUrl
@@ -181,8 +220,14 @@ def scrape_scene(url):
     if isinstance(image, list):
         image = image[0] if image else ""
 
+    title = normalize_space(video.get("name", ""))
+    if not title:
+        title = extract_meta_content(html, "og:title")
+    if not title:
+        title = re.sub(r"\s+\|\s+BoyFriendTV$", "", extract_html_title(html), flags=re.IGNORECASE)
+
     scene = {
-        "title": normalize_space(video.get("name", "")),
+        "title": title,
         "url": url,
         "date": parse_date(video.get("uploadDate", "")),
         "details": normalize_space(unescape(video.get("description", ""))),
@@ -196,9 +241,8 @@ def scrape_scene(url):
 
 def slug_to_name(slug):
     """Convert a URL slug like 'scott-demarco-2077' to 'Scott Demarco'."""
-    # Strip trailing numeric ID segment
-    slug = re.sub(r'-[a-z0-9]{3,}$', '', slug)
-    return ' '.join(part.capitalize() for part in slug.split('-') if part)
+    slug = re.sub(r"-\d+$", "", slug or "")
+    return " ".join(part.capitalize() for part in slug.split("-") if part)
 
 
 def scrape_performer(url):
@@ -222,19 +266,14 @@ def scrape_performer(url):
             return {key: value for key, value in performer.items() if value}
 
         # Fallback: og:title and og:image
-        og_title = re.search(
-            r'<meta[^>]+property=["\']og:title["\'][^>]+content=["\']([^"\']+)',
-            html, re.IGNORECASE
-        )
-        og_image = re.search(
-            r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',
-            html, re.IGNORECASE
-        )
+        name = extract_meta_content(html, "og:title")
+        if not name:
+            name = extract_html_title(html)
         performer = {
-            "name": normalize_space(og_title.group(1)) if og_title else "",
+            "name": clean_performer_name(name),
             "url": url,
             "gender": "Male",
-            "image": og_image.group(1) if og_image else "",
+            "image": extract_meta_content(html, "og:image"),
         }
         return {key: value for key, value in performer.items() if value}
 

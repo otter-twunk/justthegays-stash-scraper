@@ -2,10 +2,10 @@
 import json
 import re
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from html import unescape
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -18,6 +18,7 @@ HEADERS = {
                   "AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/124.0.0.0 Safari/537.36"
 }
+GENERIC_LINK_LABELS = {"categories", "pornstars", "models", "tags"}
 
 
 def read_stdin() -> dict:
@@ -39,6 +40,13 @@ def normalize_space(value: str) -> str:
 
 def clean_text(value: str) -> str:
     return normalize_space(unescape(value or ""))
+
+
+def absolute_url(value: str) -> str:
+    value = clean_text(value)
+    if not value:
+        return ""
+    return urljoin(BASE_URL, value)
 
 
 def strip_html(value: str) -> str:
@@ -71,6 +79,34 @@ def unique_names(values) -> list:
         seen.add(key)
         output.append({"name": name})
     return output
+
+
+def path_slug(url: str) -> str:
+    path = urlparse(url).path.strip("/")
+    if not path:
+        return ""
+    return path.split("/")[-1].strip().casefold()
+
+
+def collect_link_names(soup: BeautifulSoup, pattern: str) -> list:
+    values = []
+    seen = set()
+    for link in soup.select(f"a[href*='{pattern}']"):
+        href = absolute_url(link.get("href", ""))
+        slug = path_slug(href)
+        text = clean_text(link.get_text(" ", strip=True))
+        if not href or not text:
+            continue
+        if slug in {"", pattern.strip("/")}:
+            continue
+        if text.casefold() in GENERIC_LINK_LABELS:
+            continue
+        key = (href.casefold(), text.casefold())
+        if key in seen:
+            continue
+        seen.add(key)
+        values.append(text)
+    return values
 
 
 def clean_scene_details(value: str) -> str:
@@ -138,10 +174,12 @@ def parse_relative_date(text: str) -> str:
     if not text:
         return ""
 
+    now = datetime.now(timezone.utc)
+
     if text in {"today", "just now"}:
-        return datetime.utcnow().date().isoformat()
+        return now.date().isoformat()
     if text == "yesterday":
-        return (datetime.utcnow().date() - timedelta(days=1)).isoformat()
+        return (now.date() - timedelta(days=1)).isoformat()
 
     match = re.search(r"(\d+)\s+(year|month|week|day|hour|minute)s?\s+ago", text)
     if not match:
@@ -149,8 +187,6 @@ def parse_relative_date(text: str) -> str:
 
     amount = int(match.group(1))
     unit = match.group(2)
-    now = datetime.utcnow()
-
     if unit == "year":
         delta = timedelta(days=amount * 365)
     elif unit == "month":
@@ -207,7 +243,7 @@ def scene_from_search_item(item) -> dict:
     if not link:
         return {}
 
-    url = link.get("href", "").strip()
+    url = absolute_url(link.get("href", ""))
     title = clean_text(link.get("title") or "")
     title_node = item.select_one("strong.title")
     if not title and title_node:
@@ -217,7 +253,7 @@ def scene_from_search_item(item) -> dict:
     image = ""
     if img:
         image = img.get("data-original") or img.get("src") or ""
-        image = image.strip()
+        image = absolute_url(image)
         if image.startswith("data:image"):
             image = ""
 
@@ -245,15 +281,15 @@ def scrape_scene(url: str) -> dict:
     if not title:
         title = clean_text(soup.title.get_text()) if soup.title else ""
 
-    image = clean_text(video_json.get("thumbnailUrl", "")) or meta_content(soup, prop="og:image")
+    image = absolute_url(video_json.get("thumbnailUrl", "")) or absolute_url(meta_content(soup, prop="og:image"))
     if not image:
         preview = soup.find("link", attrs={"rel": "preload", "as": "image"})
         if preview:
-            image = clean_text(preview.get("href", ""))
+            image = absolute_url(preview.get("href", ""))
 
-    performer_links = [a.get_text(" ", strip=True) for a in soup.select("#tab_video_info a[href*='/models/']")]
-    tag_links = [a.get_text(" ", strip=True) for a in soup.select("#tab_video_info a[href*='/tags/']")]
-    category_links = [a.get_text(" ", strip=True) for a in soup.select("#tab_video_info a[href*='/categories/']")]
+    performer_links = collect_link_names(soup, "/models/")
+    tag_links = collect_link_names(soup, "/tags/")
+    category_links = collect_link_names(soup, "/categories/")
 
     scene = {
         "title": title,
@@ -286,9 +322,9 @@ def scrape_performer(url: str) -> dict:
     image = ""
     img = soup.select_one(".block-model img.thumb")
     if img:
-        image = clean_text(img.get("src", ""))
+        image = absolute_url(img.get("src", ""))
     if not image:
-        image = meta_content(soup, prop="og:image")
+        image = absolute_url(meta_content(soup, prop="og:image"))
 
     stats = {}
     for item in soup.select(".model-list li"):
@@ -358,7 +394,13 @@ def extract_fragment_query(data) -> str:
     if not isinstance(data, dict):
         return ""
 
-    direct = data.get("title") or data.get("name") or data.get("filename") or data.get("code")
+    direct = (
+        data.get("title")
+        or data.get("name")
+        or data.get("query")
+        or data.get("filename")
+        or data.get("code")
+    )
     if direct:
         return normalize_space(direct)
 

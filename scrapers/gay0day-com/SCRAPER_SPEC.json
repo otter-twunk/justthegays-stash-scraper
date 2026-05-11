@@ -84,8 +84,9 @@
     "Date is relative, not absolute — approximate ISO conversion required",
     "Performer metadata fields are frequently empty or N/A",
     "No per-scene studio field — site is a tube aggregator",
-    "No structured JSON-LD or API detected",
-    "Search result quality depends on title match — may return false positives for fragment matching"
+    "Scene pages expose VideoObject JSON-LD, but performer data still relies on HTML parsing and no public API was detected",
+    "Search result quality depends on title match — may return false positives for fragment matching",
+    "Some scene pages expose only the generic /models/ landing link rather than performer-specific /models/{slug}/ links"
   ],
   "validation_examples": {
     "scene_urls": [

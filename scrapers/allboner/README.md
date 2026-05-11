@@ -23,12 +23,13 @@ Platform: KVS (Kernel Video Sharing)
 
 Notes:
 
-- Scraper implementation pending — this folder contains Perplexity research handoff files for Codex.
 - Adult content source: keep scraping metadata-only.
-- Cloudflare present; set age-gate cookies (`age_verified=1; kt_tc=1`).
+- The scraper sends age-gate cookies (`age_verified=1; kt_tc=1`) and browser-like headers.
+- Search uses the site's `/search/<query>/` route and returns scene URLs, titles, and images when available.
 
 Known limitations:
 
-- Model/performer links not visible on sampled scene pages — may not be populated for all content.
-- Cloudflare may tighten; implement fallback for 403/challenge responses.
+- `allboner.com` is currently protected by a Cloudflare managed challenge for non-browser clients in this environment on May 11, 2026, so command-line fetches can still return empty results even though the site renders in a browser.
+- Scene dates can fall back to a best-effort conversion when only relative text such as `8 minutes` is exposed.
+- Generic performer placeholders like `pornstar` are filtered out.
 - Adult content — keep scraper metadata-only.

@@ -35,20 +35,21 @@
     "studio": ["a[href*='/sites/']"]},
   "search_strategy": {
     "supported": true,
-    "notes": "/latest-updates/ provides paginated listing; full search endpoint not confirmed."
+    "notes": "Use GET https://www.everydayporn.co/search/?q=<query>; results render in HTML on the first page and are suitable for sceneByName."
   },
   "fragment_matching_strategy": {
     "supported": false,
     "notes": "No filename-match endpoint confirmed."
   },
   "anti_bot_or_access_notes": [
-    "No Cloudflare detected on tested pages.",
-    "Standard browser headers sufficient for public pages.",
-    "Use conservative request delays between pagination calls."
+    "As of May 11, 2026, direct curl/requests traffic receives a Cloudflare managed challenge page while browser traffic succeeds.",
+    "Use a Cloudflare-aware HTTP client such as cloudscraper rather than plain requests alone.",
+    "Use conservative request delays between search calls."
   ],
   "known_limitations": [
     "Performer/model links not present on sampled scene pages.",
     "Studio/source links not confirmed — may not be populated for all content.",
+    "Search pagination appears to be AJAX-driven; first-page HTML search is confirmed, deeper paging is not.",
     "Platform appears KVS-like but exact CMS unconfirmed — avoid hardcoding KVS-specific assumptions."
   ],
   "validation_examples": {
@@ -57,7 +58,10 @@
       "https://www.everydayporn.co/video/326655/onlyfans-mr-slimkat-trufreak2k-aka-notapout-free-gay-porn2/"
     ],
     "performer_urls": [],
-    "search_queries": ["https://www.everydayporn.co/latest-updates/"],
+    "search_queries": [
+      "https://www.everydayporn.co/search/?q=teddy+torres",
+      "https://www.everydayporn.co/search/?q=mr+slimkat"
+    ],
     "fragments": []
   },
   "sources": [

@@ -36,9 +36,13 @@ Each scraper folder should contain:
 
 Current scrapers:
 
+- `scrapers/allboner`
 - `scrapers/boyfriendtv-com`
+- `scrapers/everydayporn`
+- `scrapers/gayforfans`
 - `scrapers/gayhardfuck-com`
 - `scrapers/gayfappy-com`
+- `scrapers/gayporn`
 - `scrapers/justthegays-tv`
 - `scrapers/justthegays-com`
 - `scrapers/gay0day-com`
@@ -47,8 +51,11 @@ Current scrapers:
 - `scrapers/manporn-xxx`
 - `scrapers/mymusclevideo-com`
 - `scrapers/thegay-com`
+- `scrapers/thefap`
+- `scrapers/thisvid`
 - `scrapers/tnaflix-com`
 - `scrapers/xhamster-com`
+- `scrapers/xvideos`
 
 ## Workflow
 

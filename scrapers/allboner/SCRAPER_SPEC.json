@@ -21,8 +21,8 @@
     "date": "meta property='ya:ovs:upload_date'",
     "description": "og:description",
     "cover_image": "og:image",
-    "performers": "Not consistently present — parse a[href*='/models/'] if available",
-    "tags": "a[href*='/categories/'] or meta property='video:tag'",
+    "performers": "a[href*='/models/'] on scene pages, filtering placeholders such as 'pornstar'",
+    "tags": "Scene tag list links to /search/<tag>/; meta property='video:tag' is a fallback",
     "studio": "a[href*='/sites/']"
   },
   "selectors_or_parsing_notes": {
@@ -31,7 +31,7 @@
     "description": ["og:description"],
     "cover_image": ["og:image"],
     "performers": ["a[href*='/models/']"],
-    "tags": ["a[href*='/categories/']", "meta[property='video:tag']"],
+    "tags": ["a[href*='/search/']", "meta[property='video:tag']"],
     "studio": ["a[href*='/sites/']"]},
   "search_strategy": {
     "supported": true,
@@ -42,14 +42,14 @@
     "notes": "No filename-match endpoint confirmed."
   },
   "anti_bot_or_access_notes": [
-    "Cloudflare present but content accessible with standard browser headers.",
+    "Cloudflare managed challenge blocks non-browser clients in this environment; browser rendering still works.",
     "Set Cookie: age_verified=1; kt_tc=1 to bypass age gate.",
-    "pageContext.langUrls confirms standard KVS route map.",
-    "Use conservative request delays."
+    "Browser inspection on May 11, 2026 confirmed standard KVS route map and the /search/<query>/ path.",
+    "Use conservative request delays and return empty results gracefully when challenged."
   ],
   "known_limitations": [
-    "Model/performer links not visible on sampled scene pages — may not be populated for all content.",
-    "Cloudflare may tighten; implement fallback for 403/challenge responses.",
+    "Cloudflare can still prevent scene/search fetches from script environments even with browser-like headers.",
+    "Scene dates may only be exposed as relative text on-page, requiring best-effort conversion.",
     "Adult content — keep scraper metadata-only."
   ],
   "validation_examples": {

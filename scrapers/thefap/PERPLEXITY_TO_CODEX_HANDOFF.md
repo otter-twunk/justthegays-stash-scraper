@@ -20,6 +20,7 @@ Use this file as the site-specific Codex handoff.
 ## Suggested Hook Modes
 
 - `sceneByURL`
+- `performerByURL`
 
 ## Site Notes
 
@@ -33,12 +34,12 @@ Use this file as the site-specific Codex handoff.
 
 ## Metadata Mapping
 
-- **scene_title**: `og:title` or page `<title>`
-- **date**: Not confirmed — requires live scene/post page parse during implementation
-- **description**: `og:description`
-- **cover_image**: `og:image`
-- **performers**: Profile links at `/<username>-<id>/` or `/feed/<name-id>`
-- **tags**: Group/category links at `/g/<slug>`
+- **scene_title**: scene header text or page `<title>`
+- **date**: not reliably exposed on tested public scene pages
+- **description**: derived from source slug and page title when site description is generic
+- **cover_image**: embedded player iframe `i=` query param or listing thumbnail fallback
+- **performers**: profile links at `/<username>-<id>/`
+- **tags**: group/category links at `/g/<slug>` when present, otherwise URL source slug fallback
 - **studio**: Not applicable — community/social platform
 
 ## Anti-Bot / Access Notes
@@ -52,14 +53,14 @@ Use this file as the site-specific Codex handoff.
 
 - Not a standard KVS or WordPress install — custom parsing required throughout.
 - Some content may require login.
-- Post/video/profile entity distinction needs clarification during implementation.
-- Full metadata availability requires live page fetches.
+- Public scene pages tested in May 2026 do not expose a reliable publish date.
+- Performer profile images appear to be gallery thumbnails rather than dedicated avatars.
 
 ## Validation
 
 Discover scene URLs from the listing page during implementation:
 - `https://thefap.net/videos/`
 
-- Test `sceneByURL` against a live scene page
-- Test `performerByURL` if performer pages exist
+- Test `sceneByURL` against a live scene page such as `https://thefap.net/sortadandy-1405406/coomer/i4`
+- Test `performerByURL` against a performer page such as `https://thefap.net/sortadandy-1405406/`
 - Test fragment matching if practical

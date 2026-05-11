@@ -36,14 +36,16 @@ Studio is hardcoded as `Gay0Day` (tube aggregator — no per-scene studio field)
 
 ## Known Limitations
 
-- Some pages expose performer links cleanly, while others only expose tags/categories
+- Some scene pages expose direct performer profile links, while others only show the generic `PornStars` index link, so performer extraction depends on what the page publishes
 - Performer profile fields are often empty on this site
 - Search results can be broad for short fragments
+- Relative dates are only used as fallback when `VideoObject.uploadDate` is absent
 
 ## Notes
 
 - Scene pages currently expose `VideoObject` JSON-LD, so published dates are taken from structured data when available.
 - Scene search returns a list of matching result cards from the site's own search page.
+- Generic landing links such as `Categories` and `PornStars` are filtered out so only real tag/category/model names are returned.
 
 ## Files
 

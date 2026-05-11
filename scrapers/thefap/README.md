@@ -17,19 +17,19 @@ Install:
 What it supports:
 
 - `sceneByURL`
+- `performerByURL`
 
 Platform: Custom social/content platform (not KVS)
 
 Notes:
 
-- Scraper implementation pending — this folder contains Perplexity research handoff files for Codex.
-- Adult content source: keep scraping metadata-only.
-- Custom platform — all parsing logic must be written from scratch.
-- Some content may require login.
+- Public scene URLs use `https://thefap.net/<performer>-<id>/<source>/i<number>`.
+- Public performer URLs use `https://thefap.net/<performer>-<id>/`.
+- The scraper is metadata-only and uses custom HTML parsing with no third-party Python dependencies.
+- Scene images are derived from the public embedded player URL when available.
 
 Known limitations:
 
-- Not a standard KVS or WordPress install — custom parsing required throughout.
-- Some content may require login.
-- Post/video/profile entity distinction needs clarification during implementation.
-- Full metadata availability requires live page fetches.
+- Public scene pages do not expose a reliable publish date, so `date` is currently omitted.
+- Public scene pages expose very little structured metadata; titles, thumbnails, and performer names are inferred from page HTML and URL structure.
+- Some content may require login or may become unavailable behind rate limiting or Cloudflare checks.

@@ -26,23 +26,28 @@
   "platform_notes": {
     "rendering": "Pure Vue SPA. The server returns an empty HTML shell for every route — <title> is blank, no og: meta tags, no JSON-LD. All page data is injected by JS after load.",
     "canonical_pattern": "The <link rel=canonical> in the shell uses the path /api/v2/videos/{id}/ — this is a Vue router path, NOT a REST endpoint. Requesting it directly returns the same empty HTML shell.",
-    "known_api": "The TXXX network exposes an internal JSON API used by the Vue app. Based on the window.EoCR4 CDN map embedded in the page shell, video data routes through CDN hostnames like pv1.thegay.com/c1/videos and pv3.thegay.com/c3/videos. The primary internal API endpoint pattern (observed across the TXXX network) is: GET /api/json/video/{id} with a Referer header set to the video page URL.",
+    "known_api": "The TXXX network exposes an internal JSON API used by the Vue app. The live frontend bundle currently calls: GET /api/json/video/86400/{million_bucket}/{thousand_bucket}/{id}.json with a Referer header set to the video page URL. For video 748987, the confirmed path is /api/json/video/86400/0/748000/748987.json.",
     "id_extraction": "The video ID is the first numeric segment in the URL path: /video/{id}/{slug}/ — e.g. /video/748987/bareback-gay-sex-with-jerk/ gives id=748987.",
     "age_gate": "An age_verified=1 cookie is required. Without it the server may redirect to an age-gate page.",
     "anti_bot": "No Cloudflare. A realistic Firefox UA + Accept headers + age_verified=1 cookie is sufficient to fetch the HTML shell. However, the shell contains no metadata — the API call is required."
   },
   "api_strategy": {
-    "primary": "GET https://www.thegay.com/api/json/video/{id} with headers: User-Agent (Firefox), Referer: https://www.thegay.com/video/{id}/{slug}/, Cookie: age_verified=1, Accept: application/json",
-    "fallback": "If the primary endpoint returns non-JSON or an error, try GET https://www.thegay.com/api/v2/video/{id} with the same headers. Codex should verify the correct endpoint against a live video page using browser DevTools network inspection before finalising.",
-    "id_from_url": "re.search(r'/video/(\\d+)/', url).group(1)"
+    "primary": "GET https://www.thegay.com/api/json/video/86400/{million_bucket}/{thousand_bucket}/{id}.json with headers: User-Agent (Firefox), Referer: https://www.thegay.com/video/{id}/{slug}/, Cookie: age_verified=1, Accept: application/json",
+    "fallback": "The bundle also exposes /api/videofile.php for stream file data, but scene metadata comes from the bucketed /api/json/video/... endpoint. Return partial data instead of guessing alternate metadata routes.",
+    "id_from_url": "re.search(r'/video/(\\d+)/', url).group(1)",
+    "bucket_calculation": {
+      "million_bucket": "(int(id) // 1000000) * 1000000",
+      "thousand_bucket": "(int(id) // 1000) * 1000",
+      "lifetime": 86400
+    }
   },
   "metadata_mapping": {
     "scene_title": "API response: data.title or data.name",
     "date": "API response: data.post_date or data.added (ISO-8601, strip to YYYY-MM-DD)",
     "description": "API response: data.description or data.text (may be tag list, not prose)",
-    "cover_image": "API response: data.thumbs[0].src or data.thumb_url or data.preview_url",
-    "performers": "API response: data.models[] -> each item has .title and .url",
-    "tags": "API response: data.categories[] or data.tags[] -> each item has .title",
+    "cover_image": "API response: data.thumbsrc or data.thumb; fallback to data.thumbs[0].src, data.thumb_url, or data.preview_url",
+    "performers": "API response: data.models[], data.pornstars[], or data.models_suggested[] when present; many scenes return no performer names",
+    "tags": "API response: data.categories object values -> each item has .title; fallback to data.tags[]",
     "studio": "Constant 'TheGay.com' (no per-channel metadata in API)"
   },
   "selectors_or_parsing_notes": {
@@ -59,16 +64,17 @@
       "May be a comma-separated tag list rather than a narrative synopsis on user-uploaded clips"
     ],
     "cover_image": [
-      "API JSON: response['thumbs'][0]['src'] if present",
-      "Fallback: response['thumb_url'] or response['preview_url']"
+      "API JSON: response['thumbsrc'] or response['thumb']",
+      "Fallback: response['thumbs'][0]['src'], response['thumb_url'], or response['preview_url']"
     ],
     "performers": [
-      "API JSON: response['models'] — list of objects with 'title' (name) and 'url'",
-      "Extract name from each model object"
+      "API JSON: response['models'], response['pornstars'], or response['models_suggested']",
+      "Extract title, name, or username when present",
+      "Many clips expose no performers at all; return the rest of the scene data"
     ],
     "tags": [
-      "API JSON: response['categories'] or response['tags'] — list of objects with 'title'",
-      "Extract title string from each item"
+      "API JSON: response['categories'] is often a keyed object rather than a list",
+      "Extract title string from each object value; fallback to response['tags']"
     ],
     "studio": [
       "Hard-code to 'TheGay.com' — no per-scene studio field in API"
@@ -92,7 +98,7 @@
   "known_limitations": [
     "sceneByName, sceneByQueryFragment, and sceneByFragment are not supported — search routes return empty SPA shells.",
     "performerByURL is not supported — performer pages are SPA routes with no server-rendered data.",
-    "The exact internal API endpoint path must be verified by Codex against a live request (browser DevTools) before implementation, as TXXX network endpoints may vary slightly per site.",
+    "Performer names are often absent from the live metadata payload even when the clip clearly has multiple performers.",
     "The description field may contain a tag list rather than a prose synopsis on user-uploaded clips.",
     "Studio is always hard-coded to 'TheGay.com' — no per-scene channel/studio field available.",
     "Thumbnail CDN URL structure includes a date-path segment that is not reconstructable without the API response."

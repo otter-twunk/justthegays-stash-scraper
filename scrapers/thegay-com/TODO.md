@@ -2,28 +2,27 @@
 
 ## Blocked on (Codex must do first)
 
-- [ ] **Confirm internal API endpoint** — open a scene page in browser DevTools (Network >
-  Fetch/XHR) and record the exact path the Vue app uses to load video JSON. Expected:
-  `/api/json/video/{id}`. Replace `API_ENDPOINT_PATH` in `TheGay.py`.
+- [x] **Confirm internal API endpoint** — confirmed from the shipped frontend bundle:
+  `/api/json/video/86400/{million_bucket}/{thousand_bucket}/{video_id}.json`
 
 ## Implementation
 
-- [ ] Implement `scrape_scene()` in `TheGay.py` using confirmed API endpoint
-- [ ] Map all JSON fields per `SCRAPER_SPEC.json` metadata_mapping section
-- [ ] Handle missing/null fields gracefully
-- [ ] Verify `age_verified=1` cookie is sent on all requests
-- [ ] Handle API response wrapper keys (`data`, `video`, or direct root object)
+- [x] Implement `scrape_scene()` in `TheGay.py` using confirmed API endpoint
+- [x] Map all JSON fields per `SCRAPER_SPEC.json` metadata_mapping section
+- [x] Handle missing/null fields gracefully
+- [x] Verify `age_verified=1` cookie is sent on all requests
+- [x] Handle API response wrapper keys (`data`, `video`, or direct root object)
 
 ## Validation
 
-- [ ] Test `sceneByURL` against `https://www.thegay.com/video/748987/bareback-gay-sex-with-jerk/`
+- [x] Test `sceneByURL` against `https://www.thegay.com/video/748987/bareback-gay-sex-with-jerk/`
 - [ ] Confirm title, date, image, performers, tags are populated
-- [ ] Confirm graceful empty result when URL does not match a real video
+- [x] Confirm graceful empty result when URL does not match a real video
 
 ## Docs
 
-- [ ] Write `README.md` with install instructions and known limitations
-- [ ] Update root `README.md` to add `scrapers/thegay-com/` entry
+- [x] Write `README.md` with install instructions and known limitations
+- [x] Root `README.md` already includes `scrapers/thegay-com/`; no shared update needed
 
 ## Out of scope (until further research)
 

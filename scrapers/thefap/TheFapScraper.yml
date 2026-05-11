@@ -7,3 +7,4 @@ exec:
 interface: rawJson
 hooks:
   - name: sceneByURL
+  - name: performerByURL

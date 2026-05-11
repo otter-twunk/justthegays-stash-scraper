@@ -1,0 +1,113 @@
+{
+  "site_name": "GayPorn",
+  "site_url": "https://gayporn.com/",
+  "folder_name": "gayporn",
+  "platform": "custom_tube",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://gayporn.com/video/{slug}"
+    ],
+    "performer": [
+      "https://gayporn.com/pornstars/{slug}"
+    ],
+    "search": [
+      "https://gayporn.com/search?query={query}"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "VideoObject.name; fallback to og:title/title/h1",
+    "date": "VideoObject.uploadDate",
+    "description": "VideoObject.description; fallback to meta description",
+    "cover_image": "VideoObject.thumbnailUrl; fallback to og:image",
+    "performers": "Not reliably published on scene pages; omit instead of guessing",
+    "tags": "VideoObject.genre plus keyword list, excluding the author/channel name",
+    "studio": "VideoObject.author (channel/studio name)"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "script[type='application/ld+json'] VideoObject.name",
+      "meta[property='og:title']",
+      "title",
+      "h1"
+    ],
+    "date": [
+      "script[type='application/ld+json'] VideoObject.uploadDate"
+    ],
+    "description": [
+      "script[type='application/ld+json'] VideoObject.description",
+      "meta[name='description']"
+    ],
+    "cover_image": [
+      "script[type='application/ld+json'] VideoObject.thumbnailUrl",
+      "meta[property='og:image']"
+    ],
+    "performers": [
+      "No scene-specific performer list found during live validation in May 2026"
+    ],
+    "tags": [
+      "script[type='application/ld+json'] VideoObject.genre array",
+      "script[type='application/ld+json'] VideoObject.keywords comma-separated string"
+    ],
+    "studio": [
+      "script[type='application/ld+json'] VideoObject.author"
+    ],
+    "search_results": [
+      "Search pages render scene cards as article blocks with /video/ links and h2 titles"
+    ],
+    "performer": [
+      "script[type='application/ld+json'] ProfilePage.mainEntity.name/about.name",
+      "Performer avatar from img alt='{name} avatar'"
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "url": "https://gayporn.com/search?query={query}",
+    "notes": "Parse scene cards from the rendered search/category page. Each result exposes a /video/{slug} URL and h2 title."
+  },
+  "fragment_matching_strategy": {
+    "supported": true,
+    "notes": "Use site search plus fuzzy title similarity. Accept the top match only when it is exact or above a reasonable similarity threshold."
+  },
+  "anti_bot_or_access_notes": [
+    "During live validation on 2026-05-11, curl with a browser-like User-Agent succeeded consistently while requests-based fetches often returned 502 Bad Gateway.",
+    "No login or captcha was required for scene or performer pages tested."
+  ],
+  "known_limitations": [
+    "Scene performer names are not emitted because no reliable scene-specific performer list was identified on tested scene pages.",
+    "Performer profile pages appear sparse and may only expose name, description, and avatar.",
+    "Search can return category-like results for broad terms and broad matches for short fragments.",
+    "The scraper depends on a system curl binary being available on the Stash host."
+  ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://gayporn.com/video/corbin-fisher-blond-adonis-topping"
+    ],
+    "performer_urls": [
+      "https://gayporn.com/pornstars/daniel-dean"
+    ],
+    "search_queries": [
+      "blond adonis topping",
+      "twink"
+    ],
+    "fragments": [
+      "Corbin Fisher Blond Adonis Topping",
+      "corbin fisher blond adonis topping.mp4"
+    ]
+  },
+  "sources": [
+    "https://gayporn.com/",
+    "https://gayporn.com/search?query=twink",
+    "https://gayporn.com/search?query=blond%20adonis%20topping",
+    "https://gayporn.com/video/corbin-fisher-blond-adonis-topping",
+    "https://gayporn.com/pornstars",
+    "https://gayporn.com/pornstars/daniel-dean",
+    "https://docs.stashapp.cc/in-app-manual/scraping/scraperdevelopment/"
+  ]
+}

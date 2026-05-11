@@ -22,13 +22,13 @@ Platform: Custom community video site
 
 Notes:
 
-- Scraper implementation pending — this folder contains Perplexity research handoff files for Codex.
 - Adult content source: keep scraping metadata-only.
-- Scene URLs are slug-based; listing-first discovery is required.
+- Scene URLs are slug-based and should look like `https://thisvid.com/videos/<slug>/`.
+- The scraper returns verified public metadata from the scene page: title, canonical URL, description, cover image, tags/categories, and the internal ThisVid video ID as `code`.
+- Public scene pages expose the uploader, but not a trustworthy performer list; this scraper does not invent performers from uploader/member data.
 
 Known limitations:
 
-- Scene URL structure uses slugs, not numeric IDs — listing-first discovery required.
-- Performer/member pages not confirmed during research.
-- Search support unconfirmed.
-- Full metadata availability requires live scene page fetch during implementation.
+- `sceneByName`, fragment matching, and performer scraping are not implemented.
+- Many public scene pages do not expose a reliable publish date in anonymous HTML; `date` is returned only when the page includes a parseable `Added:` value.
+- ThisVid appears to expose uploader/member links more consistently than performer/model links, so performer metadata is intentionally left blank for now.
