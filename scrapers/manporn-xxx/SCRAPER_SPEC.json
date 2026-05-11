@@ -1,0 +1,102 @@
+{
+  "site_name": "ManPorn",
+  "site_url": "https://manporn.xxx/",
+  "folder_name": "manporn-xxx",
+  "platform": "custom gay tube (Cloudflare-protected, no WordPress indicators)",
+  "supported_hooks": [
+    "sceneByURL",
+    "performerByURL"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://manporn.xxx/videos/{id}/{slug}/"
+    ],
+    "performer": [
+      "https://manporn.xxx/models/{slug}/"
+    ],
+    "search": [
+      "https://manporn.xxx/search/?q={query}  -- likely Cloudflare-gated for headless requests"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "JSON-LD VideoObject > name  (also og:title, also <title> minus ' - manporn.xxx' or ' | ManPorn.XXX')",
+    "date": "JSON-LD VideoObject > uploadDate (ISO-8601, strip to YYYY-MM-DD)",
+    "description": "JSON-LD VideoObject > description  (may be comma-separated tag list on user-uploaded content; narrative on studio content)",
+    "cover_image": "JSON-LD VideoObject > thumbnailUrl[0]  (CDN full-size thumb URL)",
+    "performers": "JSON-LD VideoObject > actor[].name  (also a[href^='/models/'] anchor text in page body)",
+    "tags": "JSON-LD VideoObject > keywords[]  (also a[href^='/categories/'] or a[href^='/tags/'] anchor text in page body)",
+    "studio": "Constant 'ManPorn' — no reliable per-scene channel/studio field in JSON-LD"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "Parse JSON-LD VideoObject: json_ld['name']",
+      "Fallback: og:title meta tag",
+      "Fallback: <title> tag, strip ' - manporn.xxx' or ' | ManPorn.XXX' suffix"
+    ],
+    "date": [
+      "Parse JSON-LD VideoObject: json_ld['uploadDate']",
+      "Expected format: '2024-05-01T00:00:00+00:00' — split on T and take date part"
+    ],
+    "description": [
+      "Parse JSON-LD VideoObject: json_ld['description']",
+      "Note: may be a comma-separated tag list on user-uploaded content, not a narrative description"
+    ],
+    "cover_image": [
+      "Parse JSON-LD VideoObject: json_ld['thumbnailUrl'][0]",
+      "Fallback: og:image meta tag (typically the poster/thumb CDN URL)"
+    ],
+    "performers": [
+      "Parse JSON-LD VideoObject: json_ld['actor'] list -> each item has 'name' and 'url'",
+      "Fallback: CSS selector 'a[href^=\"/models/\"]' anchor text from page HTML (filter out nav/static links)"
+    ],
+    "tags": [
+      "Parse JSON-LD VideoObject: json_ld['keywords'] list",
+      "Fallback: CSS selector 'a[href^=\"/categories/\"]' or 'a[href^=\"/tags/\"]' anchor text in page HTML"
+    ],
+    "studio": [
+      "Constant value: 'ManPorn'"
+    ]
+  },
+  "search_strategy": {
+    "supported": false,
+    "notes": "https://manporn.xxx/search/?q={query} exists but is expected to return a Cloudflare JS challenge for headless/script requests, consistent with the pattern seen on comparable gay tube sites (boyfriendtv.com, gay0day.com). sceneByName, sceneByQueryFragment, and sceneByFragment are therefore not reliably implementable without a JS-capable browser (e.g. playwright/selenium). Recommend disabling or documenting as unsupported until a workaround is found."
+  },
+  "fragment_matching_strategy": {
+    "supported": false,
+    "notes": "Depends on search endpoint, which is expected to be Cloudflare-blocked for script requests."
+  },
+  "anti_bot_or_access_notes": [
+    "Cloudflare protection is active on the site. Age-gate may also be present.",
+    "Scene detail pages (/videos/{id}/{slug}/) are expected to be accessible with a realistic Firefox/Linux UA, correct Accept and Accept-Language headers, and an age-gate cookie (e.g. 'age_verified=1' or site-specific equivalent — confirm on first fetch).",
+    "Python urllib and curl subprocess fallback should both work for scene pages.",
+    "Performer pages (/models/{slug}/) and search pages (/search/?q=) may trigger Cloudflare JS challenge — do not depend on live fetches for these without a JS-capable workaround.",
+    "Required headers: 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0', 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language: en-US,en;q=0.5', 'Referer: https://manporn.xxx/'",
+    "Required cookie: 'age_verified=1' (name may differ — check response cookies on first fetch and adjust if needed)"
+  ],
+  "known_limitations": [
+    "sceneByName, sceneByQueryFragment, and sceneByFragment are not supported — search is expected to be Cloudflare-gated.",
+    "performerByURL may be blocked by Cloudflare — performer pages may trigger JS challenge. Return name-from-slug + gender constant ('Male') as fallback.",
+    "Scene description may be a comma-separated tag list on user-uploaded content, not a narrative synopsis.",
+    "No reliable per-scene studio/channel field — studio is always constant 'ManPorn'.",
+    "Age-gate cookie name must be confirmed on first fetch (expected 'age_verified=1' by analogy with similar sites; adjust if response sets a different cookie)."
+  ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://manporn.xxx/videos/3400273/hot-threesome-action-with-indian-pornstars/"
+    ],
+    "performer_urls": [
+      "https://manporn.xxx/models/reign/",
+      "https://manporn.xxx/models/zbynek-onderka/"
+    ],
+    "search_queries": [],
+    "fragments": []
+  },
+  "sources": [
+    "https://manporn.xxx/videos/3400273/hot-threesome-action-with-indian-pornstars/",
+    "https://manporn.xxx/models/reign/",
+    "https://manporn.xxx/models/zbynek-onderka/",
+    "https://manporn.xxx/top-rated/",
+    "https://github.com/stashapp/CommunityScrapers",
+    "https://github.com/stashapp/stash"
+  ]
+}

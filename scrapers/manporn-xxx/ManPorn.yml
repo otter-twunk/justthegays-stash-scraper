@@ -1,0 +1,19 @@
+name: ManPorn
+
+sceneByURL:
+  - action: script
+    url:
+      - manporn.xxx/videos/
+    script:
+      - python
+      - ManPorn.py
+      - sceneByURL
+
+performerByURL:
+  - action: script
+    url:
+      - manporn.xxx/models/
+    script:
+      - python
+      - ManPorn.py
+      - performerByURL
