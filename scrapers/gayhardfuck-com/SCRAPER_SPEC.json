@@ -1,0 +1,102 @@
+{
+  "site_name": "GayHardFuck",
+  "site_url": "https://www.gayhardfuck.com/",
+  "folder_name": "gayhardfuck-com",
+  "platform": "custom_tube",
+  "supported_hooks": [
+    "sceneByURL",
+    "sceneByName",
+    "sceneByQueryFragment",
+    "sceneByFragment"
+  ],
+  "url_patterns": {
+    "scene": [
+      "https://www.gayhardfuck.com/videos/{id}/{slug}/"
+    ],
+    "performer": [],
+    "search": [
+      "https://www.gayhardfuck.com/search/?q={query}"
+    ]
+  },
+  "metadata_mapping": {
+    "scene_title": "<title> (strip trailing ' - GayHardFuck.com') or og:title meta tag",
+    "date": "relative date string near duration/views block (e.g. '3 years ago') — requires conversion to approximate ISO date",
+    "description": "og:description meta tag or inline paragraph near video player",
+    "cover_image": "og:image meta tag",
+    "performers": "links to /models/ slugs on scene page (if present)",
+    "tags": "links to /tags/ slugs on scene page",
+    "studio": "GayHardFuck (constant — tube aggregator, no per-scene studio field)"
+  },
+  "selectors_or_parsing_notes": {
+    "scene_title": [
+      "meta[property='og:title']",
+      "<title> tag — strip ' - GayHardFuck.com' suffix"
+    ],
+    "date": [
+      "Look for text matching 'X years ago', 'X months ago', 'X weeks ago', 'X days ago' in the page body near the player",
+      "Convert relative date to approximate ISO 8601 using dateutil.relativedelta or manual arithmetic from scrape time"
+    ],
+    "description": [
+      "meta[property='og:description']",
+      "paragraph following video player if OG tag absent"
+    ],
+    "cover_image": [
+      "meta[property='og:image']"
+    ],
+    "performers": [
+      "a[href*='/models/'] — collect href slugs and display text from scene page",
+      "Note: /models/ index appears empty; performer links may be sparse or absent on many scenes"
+    ],
+    "tags": [
+      "a[href*='/tags/'] — collect tag label text from scene page"
+    ],
+    "studio": [
+      "Hardcode 'GayHardFuck' as studio constant"
+    ]
+  },
+  "search_strategy": {
+    "supported": true,
+    "url": "https://www.gayhardfuck.com/search/?q={query}",
+    "notes": "Returns two sections: (1) suggested tag links and (2) video result cards. Parse video cards for title and URL. Each card links to /videos/{id}/{slug}/."
+  },
+  "fragment_matching_strategy": {
+    "supported": true,
+    "notes": "Use scene title or filename fragment as search query. Take the top video card result if title similarity is high enough (fuzzy match recommended)."
+  },
+  "performer_page_fields": {
+    "note": "performerByURL is NOT supported — the /models/ index is empty and performer profile pages do not exist on this site as of May 2026."
+  },
+  "anti_bot_or_access_notes": [
+    "No Cloudflare or captcha detected as of May 2026",
+    "Use a browser-like User-Agent header",
+    "Add short delay between requests if scraping multiple pages",
+    "Site may redirect http:// to https://www. — always use https://www.gayhardfuck.com/"
+  ],
+  "known_limitations": [
+    "Date is relative, not absolute — approximate ISO conversion required",
+    "No performer scraping — /models/ index is empty, performer pages not available",
+    "No per-scene studio field — site is a tube aggregator; hardcode constant",
+    "No structured JSON-LD or API detected",
+    "Tags may be sparse or absent on some scene pages",
+    "Search result quality depends on title match — may return false positives for fragment matching"
+  ],
+  "validation_examples": {
+    "scene_urls": [
+      "https://www.gayhardfuck.com/videos/6019/pavel-jeremy-screen-test-raw-full-contact/"
+    ],
+    "performer_urls": [],
+    "search_queries": [
+      "https://www.gayhardfuck.com/search/?q=bareback"
+    ],
+    "fragments": [
+      "bareback"
+    ]
+  },
+  "sources": [
+    "https://www.gayhardfuck.com/",
+    "https://www.gayhardfuck.com/videos/6019/pavel-jeremy-screen-test-raw-full-contact/",
+    "https://www.gayhardfuck.com/search/?q=bareback",
+    "https://www.gayhardfuck.com/models/",
+    "https://docs.stashapp.cc/in-app-manual/scraping/scraperdevelopment/"
+  ]
+}

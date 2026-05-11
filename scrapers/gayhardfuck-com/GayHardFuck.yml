@@ -1,0 +1,31 @@
+name: GayHardFuck
+
+sceneByURL:
+  - action: script
+    url:
+      - gayhardfuck.com/videos/
+    script:
+      - python
+      - GayHardFuck.py
+      - sceneByURL
+
+sceneByName:
+  action: script
+  script:
+    - python
+    - GayHardFuck.py
+    - sceneByName
+
+sceneByQueryFragment:
+  action: script
+  script:
+    - python
+    - GayHardFuck.py
+    - sceneByQueryFragment
+
+sceneByFragment:
+  action: script
+  script:
+    - python
+    - GayHardFuck.py
+    - sceneByFragment
